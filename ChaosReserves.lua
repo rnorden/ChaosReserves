@@ -130,6 +130,7 @@ function ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
 	string.gsub(temp, "|Hp[^|]*|h[^|]*|h", "|Hp[^|]*|h[^|]*|h")
 	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Converted system msg to: "..temp,1,1,0); end
 	local _, _, player = string.find(temp, "(%w+)")
+	if player == "Hplayer" then _, _, player = string.find(temp, "Hplayer:(%w+)"); end -- workaround for hyperlinks in "[xxx] is now online." message...
 	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found in system message player="..tostring(player),1,1,0); end
 	return player
 end
@@ -143,9 +144,11 @@ end
 function ChaosReserves_isPlayerInGuild(player)
 	for key, _ in ipairs(ChaosReserves_GuildRosterInfoCache) do
 		if key == player then
+			if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found player="..player.." in guild!",1,1,0); end
 			return true
 		end
 	end
+	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Didn't find player="..player.." in guild!",1,1,0); end
 	return false
 end
 
