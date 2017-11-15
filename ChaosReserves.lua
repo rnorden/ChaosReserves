@@ -115,6 +115,7 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 			ChaosReserves_AddReserve(sender, altName)
 		elseif (string.find(args, "remove%s?")) then
 			_, _, subcommand, name = string.find(args, "(%w+)%s?(.*)")
+			if name == "" then name = nil; end
 			ChaosReserves_RemoveReserve(sender, name)
 		elseif (args == "list") then
 			ChaosReserves_PrintReserves()
@@ -218,9 +219,11 @@ function ChaosReserves_AddReserve(sender, altName)
 end
 
 function ChaosReserves_RemoveReserve(sender, removeName)
+	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_RemoveReserve called with arguments: sender="..sender.."; removeName="..tostring(removeName),1,1,0); end
 	idxToRemove = 1000
 	if removeName and not ChaosReserves_isOfficer(sender) then
 		ChaosReserves_WhisperOfficersOnly(sender)
+		return
 	end
 	if not removeName or removeName == "" then nameToRemove = sender else nameToRemove = removeName end
 	for idx, reserve in ipairs(ChaosReserves_ReserveList) do
@@ -230,7 +233,7 @@ function ChaosReserves_RemoveReserve(sender, removeName)
 	end
 	if idxToRemove <= getn(ChaosReserves_ReserveList) then
 		tremove(ChaosReserves_ReserveList, idxToRemove)
-		if removeName ~= "" then
+		if removeName ~= nil then
 			ChaosReserves_GuildMessage(removeName .. " was removed from reserves by " .. sender .. "!")
 		else
 			ChaosReserves_GuildMessage(sender .. " removed himself/herself from reserves!")
