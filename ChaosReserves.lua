@@ -141,7 +141,12 @@ function ChaosReserves_findStatusInOnlineOfflineMessage(msg)
 end
 
 function ChaosReserves_isPlayerInGuild(player)
-
+	for key, _ in ipairs(ChaosReserves_GuildRosterInfoCache) do
+		if key == player then
+			return true
+		end
+	end
+	return false
 end
 
 function ChaosReserves_AddReserve(sender, altName)
