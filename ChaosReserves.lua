@@ -111,6 +111,8 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 		elseif (args == "list") then
 			ChaosReserves_PrintReserves()
 		end
+	elseif(command == "reserve") then
+		ChaosReserves_GuildMessage("You are an idiot, "..sender.."! Use !"..ChaosReserves_SlashCommand.." "..args)
 	end
 end
 
@@ -217,7 +219,7 @@ end
 function ChaosReserves_AnnounceReserveManager(playerToGreet)
 	local myName = UnitName("player")
 	if ChaosReserves_Leader == myName then
-		ChaosReserves_GuildMessage("Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
+		ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
 	end
 end
 
@@ -231,6 +233,10 @@ end
 
 function ChaosReserves_GuildMessage(msg)
 	SendChatMessage(msg, "GUILD", nil, nil);
+end
+
+function ChaosReserves_Whisper(recipient, msg)
+	SendChatMessage(msg, "WHISPER", nil, recipient)
 end
 
 ---------------------------------------------------------
