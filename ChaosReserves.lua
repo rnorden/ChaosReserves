@@ -126,7 +126,7 @@ end
 
 function ChaosReserves_WhisperChatCommandsHelp(sender)
 	ChaosReserves_Whisper(sender, "Use something like: ")
-	local prefix = "   /"..ChaosReserves_SlashCommand.." "
+	local prefix = "   !"..ChaosReserves_SlashCommand.." "
 	ChaosReserves_Whisper(sender, prefix.."add [altname] - add yourself with an optional altname if you're saving buffs")
 	ChaosReserves_Whisper(sender, prefix.."remove - remove yourself")
 	if ChaosReserves_isOfficer(sender) then
@@ -187,7 +187,6 @@ function ChaosReserves_isOfficer(player)
 	if ChaosReserves_GuildRosterInfoCache[player]["rankIndex"] < 2 then
 		return true
 	end
-	ChaosReserves_Whisper(player, "You need to be of rank Lieutenant or higher to do this!")
 	return false
 end
 
