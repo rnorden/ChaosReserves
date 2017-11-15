@@ -29,7 +29,7 @@ function ChaosReserves_EventHandlers(event)
 	if event == "CHAT_MSG_GUILD" then
 		ChaosReserves_ChatCommandHandler(arg2, arg1);
 	elseif event == "CHAT_MSG_SYSTEM" then
-		ChaosReserves_LoginLogoutHandler(arg2, arg1);	
+		ChaosReserves_LoginLogoutHandler(arg1);	
 	end
 end;
 
@@ -64,7 +64,7 @@ end
 
 -- Handle the chat commands prefixed with !reserves
 function ChaosReserves_ChatCommandHandler(sender, msg)
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_ChatCommandHandler called",1,1,0); end
+	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_ChatCommandHandler called with arguments: sender="..sender.." and msg="..msg,1,1,0); end
 	local _, _,command, args = string.find(msg, "(%w+)%s?(.*)");
 	if(command) then
 		command = strlower(command);
@@ -85,8 +85,35 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 	end
 end
 
-function ChaosReserves_LoginLogoutHandler(sender, msg)
+function ChaosReserves_LoginLogoutHandler(msg)
+	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_LoginLogoutHandler called with arguments: msg="..msg,1,1,0); end
+	local player = findPlayerInOnlineOfflineMessage(msg)
+	local status = findStatusInOnlineOfflineMessage(msg)
+	if status == "online" or status == "offline" then -- short circuit abort if this is not an online/offline system message
+		isGuildie = isPlayerInGuild(player)
+		if isGuildie then
+			if status == "online" then
+				-- print reserves list and announce reserve manager
+			elseif status == "offline" then
+				-- notice player is offline
+			end
+		end
+	end
+end
 
+function findPlayerInOnlineOfflineMessage(msg)
+	local temp = msg
+	string.gsub(temp, "|Hp[^|]*|h[^|]*|h", "|Hp[^|]*|h[^|]*|h")
+	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Converted system msg to: "..temp,1,1,0); end
+	local _, _, player = string.find(temp, "(%w+)")
+	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found in system message player="..tostring(player),1,1,0); end
+	return player
+end
+
+function findStatusInOnlineOfflineMessage(msg)
+	local _, _, status = string.find(msg, "(%w+).$")
+	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found in system message status="..tostring(status),1,1,0); end
+	return status
 end
 
 function ChaosReserves_AddReserve(sender, altName)
