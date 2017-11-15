@@ -31,7 +31,7 @@ function ChaosReserves_Init(f)
 	f:RegisterEvent("CHAT_MSG_ADDON");
 	f:RegisterEvent("CHAT_MSG_GUILD"); -- messages in guild chat
 	f:RegisterEvent("CHAT_MSG_SYSTEM"); -- online/offline system messages
-	f:RegisterEvent("GUILD_ROSTER_UPDATE"); -- updates to the guild
+	--f:RegisterEvent("GUILD_ROSTER_UPDATE"); -- updates to the guild TODO: this is fired way too often, we need to switch to listening to system messages too.
 	f:SetScript("OnEvent", function()
 		ChaosReserves_EventHandlers(event)
 	end
