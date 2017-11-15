@@ -52,6 +52,13 @@ function ChaosReserves_SlashHandler(arg1)
 	elseif(command == "disable") then
 		ChaosReserves_Enabled = false
 		DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves is now disabled! :-(",1,1,0);
+	elseif(command == "debug") then
+		ChaosReserves_debug = not ChaosReserves_debug 
+		if ChaosReserves_debug then
+			DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves is now in debugging mode!",1,1,0);
+		else 
+			DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves debugging mode disabled.",1,1,0);
+		end
 	end
 end
 
