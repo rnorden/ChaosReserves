@@ -50,9 +50,6 @@ end
 -- Event handling
 function ChaosReserves_EventHandlers(event)
 	if ChaosReserves_Disabled then return end
-	if event then
-		if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Event: "..tostring(event),1,1,0); end
-	end
 	if event == "CHAT_MSG_GUILD" then
 		ChaosReserves_ChatCommandHandler(arg2, arg1);
 	elseif event == "CHAT_MSG_SYSTEM" then
@@ -110,9 +107,11 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 			ChaosReserves_RemoveReserve(sender, name)
 		elseif (args == "list") then
 			ChaosReserves_PrintReserves()
+		else
+			ChaosReserves_Whisper(sender, "And what should I do, you idiot? Use something like !"..ChaosReserves_SlashCommand.." add")
 		end
 	elseif(command == "reserve") then
-		ChaosReserves_GuildMessage("You are an idiot, "..sender.."! Use !"..ChaosReserves_SlashCommand.." "..args)
+		ChaosReserves_Whisper(sender, "You are an idiot, "..sender.."! Use !"..ChaosReserves_SlashCommand.." "..args)
 	end
 end
 
@@ -165,7 +164,7 @@ function ChaosReserves_AddReserve(sender, altName)
 	local exists = false
 	for idx, reserve in ipairs(ChaosReserves_ReserveList) do
 		if reserve["name"] == sender then
-			ChaosReserves_GuildMessage(sender .. " is already on reserves, you idiot!")
+			ChaosReserves_Whisper(sender, sender .. " is already on reserves, you idiot!")
 			exists = true
 		end
 	end
@@ -173,7 +172,7 @@ function ChaosReserves_AddReserve(sender, altName)
 	if not exists then 
 		local reserve = {}
 		reserve["name"] = sender
-		reserve["datetime"] = getCurrentTimeInUTC()
+		reserve["datetime"] = ChaosReserves_GetGameTime()
 		if altName ~= "" then 
 			reserve["altname"] = altName
 		end
@@ -199,7 +198,6 @@ function ChaosReserves_RemoveReserve(sender, removeName)
 end
 
 function ChaosReserves_PrintReserves()
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_PrintReserves called",1,1,0); end
 	numberOfReserves = getn(ChaosReserves_ReserveList)
 	msgString = "Current reserves (" .. numberOfReserves .. "): "
 	if numberOfReserves > 0 then
@@ -225,10 +223,42 @@ end
 
 function ChaosReserves_getMainAndAltNameString(reserve)
 	ret = reserve["name"]
+	class = ChaosReserves_GuildRosterInfoCache[ret]["class"]
+	ret = ChaosReserve_GetClickableLink(ret, ChaosReserve_GetColoredString(ret, ChaosReserves_GetColorCodeForClass(class)))
 	if reserve["altname"] ~= nil then
 	 ret = ret .."/"..reserve["altname"]
 	end
 	return ret
+end
+
+function ChaosReserve_GetClickableLink(link, text)
+	return "\124Hplayer:"..link.."\124h"..text.."\124h"
+end
+
+function ChaosReserve_GetColoredString(str, colorCode)
+	return "\124cff"..tostring(colorCode)..tostring(str).."\124r"
+end
+
+function ChaosReserves_GetColorCodeForClass(class)
+	if class == "Druid" then
+		return "FF7D0A"
+	elseif class == "Hunter" then
+		return "ABD473"
+	elseif class == "Mage" then
+		return "69CCF0"
+	elseif class == "Paladin" then
+		return "F58CBA"
+	elseif class == "Priest" then
+		return "FFFFFF"
+	elseif class == "Rogue" then
+		return "FFF569"
+	elseif class == "Shaman" then
+		return "0070DE"
+	elseif class == "Warlock" then
+		return "9482C9"
+	elseif class == "Warrior" then
+		return "C79C6E"
+	end
 end
 
 function ChaosReserves_GuildMessage(msg)
@@ -237,6 +267,15 @@ end
 
 function ChaosReserves_Whisper(recipient, msg)
 	SendChatMessage(msg, "WHISPER", nil, recipient)
+end
+
+function ChaosReserves_GetGameTime()
+	local h,m = GetGameTime()
+	local s = getCurrentTimeInUTC()
+	if strlen(h) == 1 then h = "0"..h end
+	if strlen(m) == 1 then m = "0"..m end
+	if strlen(s) == 1 then s = "0"..s end
+	return h..":"..m..":"..s
 end
 
 ---------------------------------------------------------
@@ -291,9 +330,7 @@ function getCurrentTimeInUTC()
     n=floor(s/60)
     s=s-n*60
 	
-	if strlen(h) == 1 then h = "0"..h end
-	if strlen(n) == 1 then n = "0"..n end
-	if strlen(s) == 1 then s = "0"..s end
 	--return y.."-"..m.."-"..d.." "..h..":"..n..":"..s
-	return h..":"..n..":"..s
+	--return h..":"..n..":"..s
+	return s
 end
