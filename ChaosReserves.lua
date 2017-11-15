@@ -190,6 +190,10 @@ function ChaosReserves_isOfficer(player)
 	return false
 end
 
+function ChaosReserves_WhisperOfficersOnly(sender)
+	ChaosReserves_Whisper(sender, "You need to be of rank Lieutenant or higher to do this!")
+end
+
 function ChaosReserves_AddReserve(sender, altName)
 	local exists = false
 	for idx, reserve in ipairs(ChaosReserves_ReserveList) do
@@ -213,6 +217,9 @@ end
 
 function ChaosReserves_RemoveReserve(sender, removeName)
 	idxToRemove = 1000
+	if removeName and not ChaosReserves_isOfficer(sender) then
+		ChaosReserves_WhisperOfficersOnly(sender)
+	end
 	if not removeName or removeName == "" then nameToRemove = sender else nameToRemove = removeName end
 	for idx, reserve in ipairs(ChaosReserves_ReserveList) do
 		if reserve["name"] == nameToRemove then
