@@ -47,10 +47,10 @@ function ChaosReserves_SlashHandler(arg1)
 		command = "";
 	end
 	if(command == "enable") then
-		ChaosReserves_Enabled = true;
+		ChaosReserves_Disabled = false;
 		DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves is now enabled!",1,1,0);
 	elseif(command == "disable") then
-		ChaosReserves_Enabled = false
+		ChaosReserves_Disabled = true
 		DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves is now disabled! :-(",1,1,0);
 	elseif(command == "debug") then
 		ChaosReserves_debug = not ChaosReserves_debug 
