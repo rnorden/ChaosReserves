@@ -101,7 +101,7 @@ end
 -- Handle the chat commands prefixed with !reserves
 function ChaosReserves_ChatCommandHandler(sender, msg)
 	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_ChatCommandHandler called with arguments: sender="..sender.." and msg="..msg,1,1,0); end
-	local _, _,command, args = string.find(msg, "(%w+)%s?(.*)");
+	local _, _,command, args = string.find(msg, "^!(%w+)%s?(.*)");
 	if(command) then
 		command = strlower(command);
 	else
