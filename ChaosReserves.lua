@@ -2,6 +2,8 @@
 ChaosReserves_debug = true
 ChaosReserves_SlashCommand = "reserves"
 ChaosReserves_Disabled = false
+ChaosReserves_SerializationDelimiter = "§"
+ChaosReserves_ReserveListSerializationDelimiter = "#"
 
 -- list of current reserves
 ChaosReserves_ReserveList = {}
@@ -318,6 +320,62 @@ function ChaosReserves_GetGameTime()
 	if strlen(s) == 1 then s = "0"..s end
 	return h..":"..m..":"..s
 end
+
+function ChaosReserves_serializeReserveList()
+	serializedReserveList = ""
+	for _, reserve in ipairs(ChaosReserves_ReserveList) do
+		serializedReserveList = serializedReserveList .. ChaosReserves_serializeMap(reserve) .. ChaosReserves_ReserveListSerializationDelimiter
+	end
+	return serializedReserveList
+end
+
+function ChaosReserves_deserializeReserveList(serialize)
+	reservelist = {}
+	splitResultList = ChaosReserves_strsplit(serialize, ChaosReserves_ReserveListSerializationDelimiter)
+	for i=1, getn(splitResultList) do
+		reserve = ChaosReserves_deserializeMap(splitResultList[i])
+		tinsert(reservelist, reserve)
+	end
+end
+
+function ChaosReserves_serializeMap(map)
+	serialize = ""
+	for key, value in pairs(map) do
+		serialize = serialize .. key .. "=" .. value .. ChaosReserves_SerializationDelimiter
+	end
+	return serialize
+end
+
+function ChaosReserves_deserializeMap(serialize)
+	deserializedMap = {}
+	splitResult = ChaosReserves_strsplit(serialize, ChaosReserves_SerializationDelimiter)
+	for i=1, getn(splitResult) do
+		keyValuePair = splitResult[i]
+		keyValueSplit = ChaosReserves_strsplit(keyValuePair.."=", "=") --ugly hack, but it doesnt work without the concatenated "="
+		deserializedMap[keyValueSplit[1]] = keyValueSplit[2]
+	end
+	return deserializedMap
+end
+
+function ChaosReserves_strsplit(pString, pPattern)
+	local Table = {}
+	local fpat = "(.-)" .. pPattern
+	local last_end = 1
+	local s, e, cap = string.find(pString, fpat, 1)
+	while s do
+		if s ~= 1 or cap ~= "" then
+			table.insert(Table,cap)
+		end
+		last_end = e+1
+		s, e, cap = strfind(pString, fpat, last_end)
+	end
+	if last_end <= strlen(pString) then
+		cap = strfind(pString, last_end)
+		table.insert(Table, cap)
+	end
+	return Table
+end
+
 
 ---------------------------------------------------------
 --Utility function to calculate the current datetime
