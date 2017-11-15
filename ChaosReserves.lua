@@ -219,7 +219,7 @@ end
 function ChaosReserves_AnnounceReserveManager(playerToGreet)
 	local myName = UnitName("player")
 	if ChaosReserves_Leader == myName then
-		ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
+		--TODO ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
 	end
 end
 
