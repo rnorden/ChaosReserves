@@ -85,7 +85,17 @@ function ChaosReserves_SlashHandler(arg1)
 		else 
 			DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves debugging mode disabled.",1,1,0);
 		end
+	else
+		ChaosReserves_PrintSlashCommandsHelp()
 	end
+end
+
+function ChaosReserves_PrintSlashCommandsHelp()
+	local prefix = "   /"..ChaosReserves_SlashCommand.." "
+	DEFAULT_CHAT_FRAME:AddMessage("Use the following commands:",1,1,0)
+	DEFAULT_CHAT_FRAME:AddMessage(prefix.."enable - enable ChaosReserves",1,1,0)
+	DEFAULT_CHAT_FRAME:AddMessage(prefix.."disable - disable ChaosReserves",1,1,0)
+	DEFAULT_CHAT_FRAME:AddMessage(prefix.."debug - toggle debug mode on/off",1,1,0)
 end
 
 -- Handle the chat commands prefixed with !reserves
@@ -108,11 +118,23 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 		elseif (args == "list") then
 			ChaosReserves_PrintReserves()
 		else
-			ChaosReserves_Whisper(sender, "And what should I do, you idiot? Use something like !"..ChaosReserves_SlashCommand.." add")
+			ChaosReserves_WhisperChatCommandsHelp(sender)
 		end
 	elseif(command == "reserve") then
 		ChaosReserves_Whisper(sender, "You are an idiot, "..sender.."! Use !"..ChaosReserves_SlashCommand.." "..args)
 	end
+end
+
+function ChaosReserves_WhisperChatCommandsHelp(sender)
+	ChaosReserves_Whisper(sender, "Use something like: "
+	local prefix = "   /"..ChaosReserves_SlashCommand.." "
+	ChaosReserves_Whisper(sender, prefix.."add [altname] - add yourself with an optional altname if you're saving buffs")
+	ChaosReserves_Whisper(sender, prefix.."remove - remove yourself")
+	-- if sender then
+	-- remove others
+	-- force afk check
+	--end
+	ChaosReserves_Whisper(sender, prefix.."help - show this help")
 end
 
 function ChaosReserves_LoginLogoutHandler(msg)
