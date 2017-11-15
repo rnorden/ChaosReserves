@@ -87,10 +87,10 @@ end
 
 function ChaosReserves_LoginLogoutHandler(msg)
 	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_LoginLogoutHandler called with arguments: msg="..msg,1,1,0); end
-	local player = findPlayerInOnlineOfflineMessage(msg)
-	local status = findStatusInOnlineOfflineMessage(msg)
+	local player = ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
+	local status = ChaosReserves_findStatusInOnlineOfflineMessage(msg)
 	if status == "online" or status == "offline" then -- short circuit abort if this is not an online/offline system message
-		isGuildie = isPlayerInGuild(player)
+		isGuildie = ChaosReserves_isPlayerInGuild(player)
 		if isGuildie then
 			if status == "online" then
 				-- print reserves list and announce reserve manager
@@ -114,6 +114,10 @@ function ChaosReserves_findStatusInOnlineOfflineMessage(msg)
 	local _, _, status = string.find(msg, "(%w+).$")
 	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found in system message status="..tostring(status),1,1,0); end
 	return status
+end
+
+function ChaosReserves_isPlayerInGuild(player)
+
 end
 
 function ChaosReserves_AddReserve(sender, altName)
