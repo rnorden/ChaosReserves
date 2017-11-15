@@ -126,14 +126,15 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 end
 
 function ChaosReserves_WhisperChatCommandsHelp(sender)
-	ChaosReserves_Whisper(sender, "Use something like: "
+	ChaosReserves_Whisper(sender, "Use something like: ")
 	local prefix = "   /"..ChaosReserves_SlashCommand.." "
 	ChaosReserves_Whisper(sender, prefix.."add [altname] - add yourself with an optional altname if you're saving buffs")
 	ChaosReserves_Whisper(sender, prefix.."remove - remove yourself")
-	-- if sender then
-	-- remove others
-	-- force afk check
-	--end
+	if ChaosReserves_isOfficer(sender) then
+		ChaosReserves_Whisper(sender, prefix.."remove [name] - remove [name] from reserves")
+		ChaosReserves_Whisper(sender, prefix.."force check - force an afk check")
+		ChaosReserves_Whisper(sender, prefix.."leader - after sending this you will be the reserve manager")
+	end
 	ChaosReserves_Whisper(sender, prefix.."help - show this help")
 end
 
@@ -182,6 +183,15 @@ function ChaosReserves_isPlayerInGuild(player)
 	return false
 end
 
+function ChaosReserves_isOfficer(player)
+	local playerGuildInfo = ChaosReserves_GuildRosterInfoCache[player]
+	if ChaosReserves_GuildRosterInfoCache[player]["rankIndex"] < 2 then
+		return true
+	end
+	ChaosReserves_Whisper(player, "You need to be of rank Lieutenant or higher to do this!")
+	return false
+end
+
 function ChaosReserves_AddReserve(sender, altName)
 	local exists = false
 	for idx, reserve in ipairs(ChaosReserves_ReserveList) do
@@ -204,19 +214,22 @@ function ChaosReserves_AddReserve(sender, altName)
 end
 
 function ChaosReserves_RemoveReserve(sender, removeName)
-	local idxToRemove = 1000
+	idxToRemove = 1000
+	if not removeName or removeName == "" then nameToRemove = sender else nameToRemove = removeName end
 	for idx, reserve in ipairs(ChaosReserves_ReserveList) do
-		if reserve["name"] == removeName then
+		if reserve["name"] == nameToRemove then
 			idxToRemove = idx
 		end
 	end
-	tremove(ChaosReserves_ReserveList, idxToRemove)
-	if removeName ~= "" then
-		ChaosReserves_GuildMessage(removeName .. " was removed from reserves by " .. sender .. "!")
-	else
-		ChaosReserves_GuildMessage(sender .. " removed himself/herself from reserves!")
+	if idxToRemove <= getn(ChaosReserves_ReserveList) then
+		tremove(ChaosReserves_ReserveList, idxToRemove)
+		if removeName ~= "" then
+			ChaosReserves_GuildMessage(removeName .. " was removed from reserves by " .. sender .. "!")
+		else
+			ChaosReserves_GuildMessage(sender .. " removed himself/herself from reserves!")
+		end
+		ChaosReserves_PrintReserves()
 	end
-	ChaosReserves_PrintReserves()
 end
 
 function ChaosReserves_PrintReserves()
