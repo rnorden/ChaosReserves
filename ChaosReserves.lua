@@ -1,16 +1,37 @@
 -- global variables
-ChaosReserves_debug = false
+ChaosReserves_debug = true
 ChaosReserves_SlashCommand = "/reserves"
-ChaosReserves_Disabled = true
+ChaosReserves_Disabled = false
 
 -- list of current reserves
 ChaosReserves_ReserveList = {}
 
+-- caching GuildRosterInfo
+ChaosReserves_GuildRosterInfoCache = {}
+
+function ChaosReserves_InitGuildRosterInfoCache()
+	ChaosReserves_GuildRosterInfoCache = {}
+	for i=1, GetNumGuildMembers() do
+		local name, rank, rankIndex, _, class = GetGuildRosterInfo(i);
+		ChaosReserves_GuildRosterInfoCache[name] = {
+			name = name,
+			rank = rank,
+			rankIndex = rankIndex,
+			class = class
+		}
+	end
+	if ChaosReserves_debug then 
+		local idxName = UnitName("player")
+		local itemString = "name: "..ChaosReserves_GuildRosterInfoCache[idxName]["name"].." rank: "..ChaosReserves_GuildRosterInfoCache[idxName]["rank"].." rankIndex: "..ChaosReserves_GuildRosterInfoCache[idxName]["rankIndex"].." class: "..ChaosReserves_GuildRosterInfoCache[idxName]["class"]
+		DEFAULT_CHAT_FRAME:AddMessage("Example GuildRosterInfoCache item: "..itemString,1,1,0)
+	end
+end
 
 function ChaosReserves_Init(f)
 	f:RegisterEvent("CHAT_MSG_ADDON");
 	f:RegisterEvent("CHAT_MSG_GUILD"); -- messages in guild chat
 	f:RegisterEvent("CHAT_MSG_SYSTEM"); -- online/offline system messages
+	f:RegisterEvent("GUILD_ROSTER_UPDATE"); -- updates to the guild
 	f:SetScript("OnEvent", function()
 		ChaosReserves_EventHandlers(event)
 	end
@@ -18,6 +39,7 @@ function ChaosReserves_Init(f)
 	SLASH_CHAOSRESERVES1 = ChaosReserves_SlashCommand;
 	SlashCmdList["CHAOSRESERVES"] = function(args) ChaosReserves_SlashHandler(args); end;
 	DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves loaded. Have fun raiding!",1,1,0);
+	ChaosReserves_InitGuildRosterInfoCache()
 end
 
 -- Event handling
@@ -29,7 +51,9 @@ function ChaosReserves_EventHandlers(event)
 	if event == "CHAT_MSG_GUILD" then
 		ChaosReserves_ChatCommandHandler(arg2, arg1);
 	elseif event == "CHAT_MSG_SYSTEM" then
-		ChaosReserves_LoginLogoutHandler(arg1);	
+		ChaosReserves_LoginLogoutHandler(arg1);
+	elseif event == "CHANNEL_ROSTER_UPDATE" then
+		ChaosReserves_InitGuildRosterInfoCache(); -- reinitialize the guild info cache
 	end
 end;
 
