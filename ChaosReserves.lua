@@ -101,7 +101,7 @@ function ChaosReserves_LoginLogoutHandler(msg)
 	end
 end
 
-function findPlayerInOnlineOfflineMessage(msg)
+function ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
 	local temp = msg
 	string.gsub(temp, "|Hp[^|]*|h[^|]*|h", "|Hp[^|]*|h[^|]*|h")
 	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Converted system msg to: "..temp,1,1,0); end
@@ -110,7 +110,7 @@ function findPlayerInOnlineOfflineMessage(msg)
 	return player
 end
 
-function findStatusInOnlineOfflineMessage(msg)
+function ChaosReserves_findStatusInOnlineOfflineMessage(msg)
 	local _, _, status = string.find(msg, "(%w+).$")
 	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found in system message status="..tostring(status),1,1,0); end
 	return status
@@ -159,7 +159,7 @@ function ChaosReserves_PrintReserves()
 	msgString = "Current reserves (" .. numberOfReserves .. "): "
 	if numberOfReserves > 0 then
 		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
-			msgString = msgString .. getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
+			msgString = msgString .. ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
 			if idx < numberOfReserves then
 				-- more reserves in the list, add separator
 				msgString = msgString .. ", "
@@ -171,7 +171,7 @@ function ChaosReserves_PrintReserves()
 	ChaosReserves_GuildMessage(msgString)
 end
 
-function getMainAndAltNameString(reserve)
+function ChaosReserves_getMainAndAltNameString(reserve)
 	ret = reserve["name"]
 	if reserve["altname"] ~= nil then
 	 ret = ret .."/"..reserve["altname"]
