@@ -224,7 +224,8 @@ end
 function ChaosReserves_getMainAndAltNameString(reserve)
 	ret = reserve["name"]
 	class = ChaosReserves_GuildRosterInfoCache[ret]["class"]
-	ret = ChaosReserve_GetClickableLink(ret, ChaosReserve_GetColoredString(ret, ChaosReserves_GetColorCodeForClass(class)))
+	--ret = ChaosReserve_GetClickableLink(ret, ChaosReserve_GetColoredString(ret, ChaosReserves_GetColorCodeForClass(class))) --funktioniert nicht
+	ret = ChaosReserve_GetColoredString(ChaosReserve_GetClickableLink(ret, ret), ChaosReserves_GetColorCodeForClass(class))
 	if reserve["altname"] ~= nil then
 	 ret = ret .."/"..reserve["altname"]
 	end
