@@ -1,7 +1,7 @@
 -- global variables
 ChaosReserves_debug = false
 ChaosReserves_SlashCommand = "/reserves"
-ChaosReserves_Enabled = false
+ChaosReserves_Disabled = true
 
 -- list of current reserves
 ChaosReserves_ReserveList = {}
@@ -22,6 +22,7 @@ end
 
 -- Event handling
 function ChaosReserves_EventHandlers(event)
+	if ChaosReserves_Disabled then return end
 	if event then
 		if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Event: "..tostring(event),1,1,0); end
 	end
