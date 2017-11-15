@@ -1,6 +1,6 @@
 -- global variables
 ChaosReserves_debug = true
-ChaosReserves_SlashCommand = "/reserves"
+ChaosReserves_SlashCommand = "reserves"
 ChaosReserves_Disabled = false
 
 -- list of current reserves
@@ -9,8 +9,12 @@ ChaosReserves_ReserveList = {}
 -- caching GuildRosterInfo
 ChaosReserves_GuildRosterInfoCache = {}
 
+-- this is the reserve manager (leader)
+ChaosReserves_Leader = UnitName("player")
+
 function ChaosReserves_InitGuildRosterInfoCache()
 	ChaosReserves_GuildRosterInfoCache = {}
+	SetGuildRosterShowOffline(true) -- include offline guildies
 	for i=1, GetNumGuildMembers() do
 		local name, rank, rankIndex, _, class = GetGuildRosterInfo(i);
 		ChaosReserves_GuildRosterInfoCache[name] = {
@@ -19,6 +23,7 @@ function ChaosReserves_InitGuildRosterInfoCache()
 			rankIndex = rankIndex,
 			class = class
 		}
+		if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Added to GuildRosterInfoCache: "..name,1,1,0); end
 	end
 	if ChaosReserves_debug then 
 		local idxName = UnitName("player")
@@ -36,7 +41,7 @@ function ChaosReserves_Init(f)
 		ChaosReserves_EventHandlers(event)
 	end
 	)
-	SLASH_CHAOSRESERVES1 = ChaosReserves_SlashCommand;
+	SLASH_CHAOSRESERVES1 = "/"..ChaosReserves_SlashCommand;
 	SlashCmdList["CHAOSRESERVES"] = function(args) ChaosReserves_SlashHandler(args); end;
 	DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves loaded. Have fun raiding!",1,1,0);
 	ChaosReserves_InitGuildRosterInfoCache()
@@ -95,7 +100,7 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 	else
 		command = "";
 	end
-	if(command == "reserves") then
+	if(command == ChaosReserves_SlashCommand) then
 		if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Chatcommand token detected",1,1,0); end
 		if (string.find(args, "add%s?")) then
 			_, _, subcommand, altName = string.find(args, "(%w+)%s?(.*)")
@@ -118,6 +123,8 @@ function ChaosReserves_LoginLogoutHandler(msg)
 		if isGuildie then
 			if status == "online" then
 				-- print reserves list and announce reserve manager
+				ChaosReserves_PrintReserves()
+				ChaosReserves_AnnounceReserveManager(player)
 			elseif status == "offline" then
 				-- notice player is offline
 			end
@@ -142,7 +149,7 @@ function ChaosReserves_findStatusInOnlineOfflineMessage(msg)
 end
 
 function ChaosReserves_isPlayerInGuild(player)
-	for key, _ in ipairs(ChaosReserves_GuildRosterInfoCache) do
+	for key, _ in pairs(ChaosReserves_GuildRosterInfoCache) do
 		if key == player then
 			if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found player="..player.." in guild!",1,1,0); end
 			return true
@@ -205,6 +212,13 @@ function ChaosReserves_PrintReserves()
 		msgString = msgString .. "None!"
 	end
 	ChaosReserves_GuildMessage(msgString)
+end
+
+function ChaosReserves_AnnounceReserveManager(playerToGreet)
+	local myName = UnitName("player")
+	if ChaosReserves_Leader == myName then
+		ChaosReserves_GuildMessage("Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
+	end
 end
 
 function ChaosReserves_getMainAndAltNameString(reserve)
