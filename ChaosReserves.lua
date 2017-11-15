@@ -23,7 +23,6 @@ function ChaosReserves_InitGuildRosterInfoCache()
 			rankIndex = rankIndex,
 			class = class
 		}
-		if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Added to GuildRosterInfoCache: "..name,1,1,0); end
 	end
 	if ChaosReserves_debug then 
 		local idxName = UnitName("player")
