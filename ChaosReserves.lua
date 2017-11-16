@@ -185,10 +185,10 @@ function ChaosReserves_ChatAddonMessageHandler(prefix, message, channel, sender)
 	if  (prefix == ChaosReserves_AddonMsgPrefix --[[and ChaosReserves_isOfficer(UnitName("player"))--]]) then
 		if ChaosReserves_debug then Debug_Message("Received addon msg on topic ("..topic.."): "..string.sub(message,1,100)); end
 		if (topic == ChaosReserves_Topic_Reservelist) then
-			if (message == ChaosReserves_Topic_Reservelist_Request) then
+			if (message == ChaosReserves_TopicReservelist_Request) then
 				ChaosReserves_SendReserveList(sender)
 			else
-				ChaosReserves_ProcessIncomingReserveList(message)
+				ChaosReserves_ProcessIncomingReserveList(sender, message)
 			end
 		elseif (topic == ChaosReserves_Topic_Leader) then
 			if ChaosReserves_debug then Debug_Message("Received leader message: "..string.sub(message,1,100)); end
@@ -202,11 +202,17 @@ function ChaosReserves_RequestReserveList()
 end
 
 function ChaosReserves_SendReserveList(sender)
-	ChaosReserves_AddonMessage(ChaosReserves_Topic_Reservelist, ChaosReserves_serializeReserveList())
+	if sender ~= UnitName("player") then -- dont answer your own request
+		if ChaosReserves_debug then Debug_Message("Incoming reserve list request..."); end
+		ChaosReserves_AddonMessage(ChaosReserves_Topic_Reservelist, ChaosReserves_serializeReserveList())
+		if ChaosReserves_debug then Debug_Message("Finished sending my reserve list!"); end
+	end
 end
 
-function ChaosReserves_ProcessIncomingReserveList(reserveList)
-
+function ChaosReserves_ProcessIncomingReserveList(sender, reserveList)
+	if sender ~= UnitName("player") then -- dont answer your own request
+		if ChaosReserves_debug then Debug_Message("Incoming reserve list: "..reserveList); end
+	end
 end
 
 function ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
