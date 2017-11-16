@@ -230,7 +230,7 @@ function ChaosReserves_SetLeader(sender, newLeader)
 		if ChaosReserves_isOfficer(newLeader) then
 			if ChaosReserves_Leader ~= newLeader then
 				ChaosReserves_Leader = newLeader
-				if newLeader == UnitName("player") then
+				if ChaosReserves_ImTheLeader() then
 					ChaosReserves_GuildMessage("I'm the new leader!")
 					ChaosReserves_AddonMessage(ChaosReserves_Topic_Leader, ChaosReserves_Leader)
 				end
@@ -307,25 +307,26 @@ function ChaosReserves_RemoveReserve(sender, removeName)
 end
 
 function ChaosReserves_PrintReserves()
-	numberOfReserves = getn(ChaosReserves_ReserveList)
-	msgString = "Current reserves (" .. numberOfReserves .. "): "
-	if numberOfReserves > 0 then
-		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
-			msgString = msgString .. ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
-			if idx < numberOfReserves then
-				-- more reserves in the list, add separator
-				msgString = msgString .. ", "
+	if ChaosReserves_ImTheLeader() then
+		numberOfReserves = getn(ChaosReserves_ReserveList)
+		msgString = "Current reserves (" .. numberOfReserves .. "): "
+		if numberOfReserves > 0 then
+			for idx, reserve in ipairs(ChaosReserves_ReserveList) do
+				msgString = msgString .. ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
+				if idx < numberOfReserves then
+					-- more reserves in the list, add separator
+					msgString = msgString .. ", "
+				end
 			end
+		else
+			msgString = msgString .. "None!"
 		end
-	else
-		msgString = msgString .. "None!"
+		ChaosReserves_GuildMessage(msgString)
 	end
-	ChaosReserves_GuildMessage(msgString)
 end
 
 function ChaosReserves_AnnounceLeader(playerToGreet)
-	local myName = UnitName("player")
-	if ChaosReserves_Leader == myName then
+	if ChaosReserves_ImTheLeader() then
 		--TODO ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
 	end
 end
