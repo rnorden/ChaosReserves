@@ -13,7 +13,7 @@ ChaosReserves_debug = true
 
 -- list of current reserves
 ChaosReserves_ReserveList = {}
-ChaosReserves_ReserveList_Update_Timestamp = time()
+ChaosReserves_ReserveList_Update_Timestamp = 0
 
 -- caching GuildRosterInfo
 ChaosReserves_GuildRosterInfoCache = {}
