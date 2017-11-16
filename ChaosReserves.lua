@@ -289,50 +289,58 @@ function ChaosReserves_WhisperOfficersOnly(sender)
 end
 
 function ChaosReserves_AddReserve(sender, altName)
-	local exists = false
-	for idx, reserve in ipairs(ChaosReserves_ReserveList) do
-		if reserve["name"] == sender then
-			ChaosReserves_Whisper(sender, sender .. " is already on reserves, you idiot!")
-			exists = true
+	if ChaosReserves_ImTheLeader() then
+		local exists = false
+		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
+			if reserve["name"] == sender then
+				ChaosReserves_Whisper(sender, sender .. " is already on reserves, you idiot!")
+				exists = true
+			end
 		end
-	end
-	
-	if not exists then 
-		local reserve = {}
-		reserve["name"] = sender
-		reserve["datetime"] = ChaosReserves_GetGameTime()
-		if altName ~= "" then 
-			reserve["altname"] = altName
+		if not exists then
+			local reserve = {}
+			reserve["name"] = sender
+			reserve["datetime"] = ChaosReserves_GetGameTime()
+			if altName ~= "" then
+				reserve["altname"] = altName
+			end
+			tinsert(ChaosReserves_ReserveList, reserve)
+			ChaosReserves_CallbackReservesUpdated()
+			ChaosReserves_PrintReserves()
 		end
-		tinsert(ChaosReserves_ReserveList, reserve)
-		ChaosReserves_ReserveList_Update_Timestamp = time()
-		ChaosReserves_PrintReserves()
 	end
 end
 
 function ChaosReserves_RemoveReserve(sender, removeName)
-	if ChaosReserves_debug then Debug_Message("ChaosReserves_RemoveReserve called with arguments: sender="..sender.."; removeName="..tostring(removeName)); end
-	idxToRemove = 1000
-	if removeName and not ChaosReserves_isOfficer(sender) then
-		ChaosReserves_WhisperOfficersOnly(sender)
-		return
-	end
-	if not removeName or removeName == "" then nameToRemove = sender else nameToRemove = removeName end
-	for idx, reserve in ipairs(ChaosReserves_ReserveList) do
-		if reserve["name"] == nameToRemove then
-			idxToRemove = idx
+	if ChaosReserves_ImTheLeader() then
+		if ChaosReserves_debug then Debug_Message("ChaosReserves_RemoveReserve called with arguments: sender="..sender.."; removeName="..tostring(removeName)); end
+		idxToRemove = 1000
+		if removeName and not ChaosReserves_isOfficer(sender) then
+			ChaosReserves_WhisperOfficersOnly(sender)
+			return
+		end
+		if not removeName or removeName == "" then nameToRemove = sender else nameToRemove = removeName end
+		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
+			if reserve["name"] == nameToRemove then
+				idxToRemove = idx
+			end
+		end
+		if idxToRemove <= getn(ChaosReserves_ReserveList) then
+			tremove(ChaosReserves_ReserveList, idxToRemove)
+			ChaosReserves_CallbackReservesUpdated()
+			if removeName ~= nil then
+				ChaosReserves_GuildMessage(removeName .. " was removed from reserves by " .. sender .. "!")
+			else
+				ChaosReserves_GuildMessage(sender .. " removed himself/herself from reserves!")
+			end
+			ChaosReserves_PrintReserves()
 		end
 	end
-	if idxToRemove <= getn(ChaosReserves_ReserveList) then
-		tremove(ChaosReserves_ReserveList, idxToRemove)
-		ChaosReserves_ReserveList_Update_Timestamp = time()
-		if removeName ~= nil then
-			ChaosReserves_GuildMessage(removeName .. " was removed from reserves by " .. sender .. "!")
-		else
-			ChaosReserves_GuildMessage(sender .. " removed himself/herself from reserves!")
-		end
-		ChaosReserves_PrintReserves()
-	end
+end
+
+function ChaosReserves_CallbackReservesUpdated()
+	ChaosReserves_ReserveList_Update_Timestamp = time()
+	ChaosReserves_SendReserveList(sender)
 end
 
 function ChaosReserves_PrintReserves()
