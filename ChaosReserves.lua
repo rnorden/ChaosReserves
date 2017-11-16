@@ -65,6 +65,7 @@ function ChaosReserves_Init(f)
 	SlashCmdList["CHAOSRESERVES"] = function(args) ChaosReserves_SlashHandler(args); end;
 	Debug_Message("ChaosReserves loaded. Have fun raiding!");
 	ChaosReserves_InitGuildRosterInfoCache()
+	ChaosReserves_RequestReserveList()
 end
 
 -- Event handling
