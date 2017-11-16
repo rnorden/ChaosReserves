@@ -373,10 +373,21 @@ function ChaosReserves_PrintReserves()
 		msgString = "Current reserves (" .. numberOfReserves .. "): "
 		if numberOfReserves > 0 then
 			for idx, reserve in ipairs(ChaosReserves_ReserveList) do
-				msgString = msgString .. ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
+				tempMsgString = msgString .. ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
 				if idx < numberOfReserves then
 					-- more reserves in the list, add separator
-					msgString = msgString .. ", "
+					tempMsgString = tempMsgString .. ", "
+				end
+				if (strlen(tempMsgString) > 255) then --prematurely send a message because there's a 255 char limit
+					ChaosReserves_GuildMessage(msgString)
+					-- overwrite the existing msgString because it has been sent already
+					msgString = ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
+					if idx < numberOfReserves then
+						-- more reserves in the list, add separator
+						msgString = msgString .. ", "
+					end
+				else
+					msgString = tempMsgString
 				end
 			end
 		else
