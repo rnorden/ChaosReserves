@@ -13,6 +13,7 @@ ChaosReserves_debug = true
 
 -- list of current reserves
 ChaosReserves_ReserveList = {}
+ChaosReserves_ReserveList_Update_Timestamp = time()
 
 -- caching GuildRosterInfo
 ChaosReserves_GuildRosterInfoCache = {}
@@ -23,6 +24,7 @@ ChaosReserves_Leader = UnitName("player")
 --debug function to print all local variables
 function ChaosReserves_DumpVariables()
 	Debug_Message("ChaosReserves_ReserveList: "..ChaosReserves_serializeReserveList());
+	Debug_Message("ChaosReserves_ReserveList_Update_Timestamp: "..ChaosReserves_ReserveList_Update_Timestamp);
 	Debug_Message("ChaosReserves_Leader: "..ChaosReserves_Leader);
 end
 
@@ -296,6 +298,7 @@ function ChaosReserves_AddReserve(sender, altName)
 			reserve["altname"] = altName
 		end
 		tinsert(ChaosReserves_ReserveList, reserve)
+		ChaosReserves_ReserveList_Update_Timestamp = time()
 		ChaosReserves_PrintReserves()
 	end
 end
@@ -315,6 +318,7 @@ function ChaosReserves_RemoveReserve(sender, removeName)
 	end
 	if idxToRemove <= getn(ChaosReserves_ReserveList) then
 		tremove(ChaosReserves_ReserveList, idxToRemove)
+		ChaosReserves_ReserveList_Update_Timestamp = time()
 		if removeName ~= nil then
 			ChaosReserves_GuildMessage(removeName .. " was removed from reserves by " .. sender .. "!")
 		else
