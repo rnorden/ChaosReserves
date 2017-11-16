@@ -423,7 +423,7 @@ function ChaosReserves_GetGameTime()
 end
 
 function ChaosReserves_serializeReserveList()
-	serializedReserveList = ""
+	serializedReserveList = ChaosReserves_serializeMap({["timestamp"]=ChaosReserves_ReserveList_Update_Timestamp}) .. ChaosReserves_ReserveListSerializationDelimiter
 	for _, reserve in ipairs(ChaosReserves_ReserveList) do
 		serializedReserveList = serializedReserveList .. ChaosReserves_serializeMap(reserve) .. ChaosReserves_ReserveListSerializationDelimiter
 	end
@@ -433,10 +433,13 @@ end
 function ChaosReserves_deserializeReserveList(serialize)
 	reservelist = {}
 	splitResultList = ChaosReserves_strsplit(serialize, ChaosReserves_ReserveListSerializationDelimiter)
-	for i=1, getn(splitResultList) do
+	timeStampKeyValuePair = ChaosReserves_deserializeMap(splitResultList[1])
+	ChaosReserves_ReserveList_Update_Timestamp = timeStampKeyValuePair["timestamp"]
+	for i=2, getn(splitResultList) do
 		reserve = ChaosReserves_deserializeMap(splitResultList[i])
 		tinsert(reservelist, reserve)
 	end
+	ChaosReserves_ReserveList = reservelist
 end
 
 function ChaosReserves_serializeMap(map)
