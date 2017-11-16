@@ -249,6 +249,10 @@ function ChaosReserves_isOfficer(player)
 	return false
 end
 
+function ChaosReserves_ImTheLeader()
+	return ChaosReserves_Leader == UnitName("player")
+end
+
 function ChaosReserves_WhisperOfficersOnly(sender)
 	if sender == UnitName("player") then
 		Debug_Message("You need to be of rank Lieutenant or higher to do this!")
