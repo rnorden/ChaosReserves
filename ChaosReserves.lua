@@ -76,10 +76,6 @@ function ChaosReserves_EventHandlers(event)
 	end
 end;
 
--- bootstrap the Addon by creating a frame and passing it to the ChaosReserves_Init function
-local f = CreateFrame("Frame",nil,UIParent)
-ChaosReserves_Init(f)
-
 -- Handle the slash commands
 function ChaosReserves_SlashHandler(arg1)
 	if ChaosReserves_debug then Debug_Message("ChaosReserves_SlashHandler called"); end
