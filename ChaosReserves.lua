@@ -53,6 +53,7 @@ function ChaosReserves_InitGuildRosterInfoCache()
 end
 
 ChaosReserves_ListenEvents = {
+	"ADDON_LOADED",
 	"CHAT_MSG_ADDON", 
 	"CHAT_MSG_GUILD", -- messages in guild chat
 	"CHAT_MSG_SYSTEM", -- online/offline system messages
@@ -86,7 +87,9 @@ end
 -- Event handling
 function ChaosReserves_EventHandlers(event)
 	if ChaosReserves_Disabled then return end
-	if event == "CHAT_MSG_ADDON" then
+	if event == "ADDON_LOADED" then
+		ChaosReserves_SlashHandler("enable")
+	elseif event == "CHAT_MSG_ADDON" then
 		ChaosReserves_ChatAddonMessageHandler(arg1, arg2, arg3, arg4)
 	elseif event == "CHAT_MSG_GUILD" then
 		ChaosReserves_ChatCommandHandler(arg2, arg1);
