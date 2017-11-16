@@ -1,10 +1,15 @@
--- global variables
-ChaosReserves_debug = true
+-- global static variables
 ChaosReserves_SlashCommand = "reserves"
-ChaosReserves_Disabled = false
+ChaosReserves_AddonMsgPrefix = "CHAOSRESERVES"
+ChaosReserves_Topic_Leader = "LEADER"
+ChaosReserves_Topic_Reservelist = "RESERVELIST"
+ChaosReserves_TopicReservelist_Request = "REQUEST"
 ChaosReserves_SerializationDelimiter = "§"
 ChaosReserves_ReserveListSerializationDelimiter = "#"
 
+-- changeable global variables
+ChaosReserves_Disabled = false
+ChaosReserves_debug = true
 -- list of current reserves
 ChaosReserves_ReserveList = {}
 
