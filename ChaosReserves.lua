@@ -171,6 +171,7 @@ function ChaosReserves_WhisperChatCommandsHelp(sender)
 	ChaosReserves_Whisper(sender, "Use something like: ")
 	local prefix = "   !"..ChaosReserves_SlashCommand.." "
 	ChaosReserves_Whisper(sender, prefix.."add [altname] - add yourself with an optional altname if you're saving buffs")
+	ChaosReserves_Whisper(sender, prefix.."list - list the current reserve list")
 	ChaosReserves_Whisper(sender, prefix.."remove - remove yourself")
 	if ChaosReserves_isOfficer(sender) then
 		ChaosReserves_Whisper(sender, prefix.."remove [name] - remove [name] from reserves")
