@@ -284,7 +284,11 @@ function ChaosReserves_WhisperOfficersOnly(sender)
 	if sender == UnitName("player") then
 		Debug_Message("You need to be of rank Lieutenant or higher to do this!")
 	else
-		ChaosReserves_Whisper(sender, "You need to be of rank Lieutenant or higher to do this!")
+		if UnitLevel("player") < 10 then
+			Debug_Message(sender.." needs to be of rank Lieutenant or higher to do this!")
+		else
+			ChaosReserves_Whisper(sender, "You need to be of rank Lieutenant or higher to do this!")
+		end
 	end
 end
 
