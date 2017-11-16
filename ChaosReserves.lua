@@ -459,3 +459,7 @@ function getCurrentTimeInUTC()
 	--return h..":"..n..":"..s
 	return s
 end
+
+-- bootstrap the Addon by creating a frame and passing it to the ChaosReserves_Init function
+local f = CreateFrame("Frame",nil,UIParent)
+ChaosReserves_Init(f)
