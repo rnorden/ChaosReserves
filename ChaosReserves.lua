@@ -216,8 +216,8 @@ function ChaosReserves_ProcessIncomingReserveList(sender, serializedReserveList)
 	if sender ~= UnitName("player") then -- dont answer your own request
 		if ChaosReserves_debug then Debug_Message("Incoming reserve list: "..serializedReserveList); end
 		local timestamp, reserveList = ChaosReserves_deserializeReserveList(serializedReserveList)
-		if (tonumber(timestamp) > ChaosReserves_ReserveList_Update_Timestamp) then -- the incoming reserveList is newer than what I have
-			ChaosReserves_ReserveList_Update_Timestamp = timestamp
+		if (tonumber(timestamp) > tonumber(ChaosReserves_ReserveList_Update_Timestamp)) then -- the incoming reserveList is newer than what I have
+			ChaosReserves_ReserveList_Update_Timestamp = tonumber(timestamp)
 			ChaosReserves_ReserveList = reserveList
 			Debug_Message("Updated reserve list with "..sender.."'s!")
 		end
