@@ -346,10 +346,11 @@ function ChaosReserves_RemoveReserve(sender, removeName)
 			ChaosReserves_WhisperOfficersOnly(sender)
 			return
 		end
-		if not removeName or removeName == "" then nameToRemove = sender else nameToRemove = removeName end
+		if not removeName or removeName == "" then nameToRemove = string.lower(sender) else nameToRemove = string.lower(removeName) end
 		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
-			if reserve["name"] == nameToRemove then
+			if string.lower(reserve["name"]) == nameToRemove then
 				idxToRemove = idx
+				nameToRemove = reserve["name"] --fix the name for later Guild messages :)
 			end
 		end
 		if idxToRemove <= getn(ChaosReserves_ReserveList) then
