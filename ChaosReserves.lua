@@ -55,7 +55,7 @@ function ChaosReserves_Init(f)
 	)
 	SLASH_CHAOSRESERVES1 = "/"..ChaosReserves_SlashCommand;
 	SlashCmdList["CHAOSRESERVES"] = function(args) ChaosReserves_SlashHandler(args); end;
-	DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves loaded. Have fun raiding!",1,1,0);
+	Debug_Message("ChaosReserves loaded. Have fun raiding!");
 	ChaosReserves_InitGuildRosterInfoCache()
 end
 
@@ -77,7 +77,7 @@ ChaosReserves_Init(f)
 
 -- Handle the slash commands
 function ChaosReserves_SlashHandler(arg1)
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_SlashHandler called",1,1,0); end
+	if ChaosReserves_debug then Debug_Message("ChaosReserves_SlashHandler called"); end
 	local _, _, command, args = string.find(arg1, "(%w+)%s?(.*)");
 	if(command) then
 		command = strlower(command);
@@ -86,16 +86,16 @@ function ChaosReserves_SlashHandler(arg1)
 	end
 	if(command == "enable") then
 		ChaosReserves_Disabled = false;
-		DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves is now enabled!",1,1,0);
+		Debug_Message("ChaosReserves is now enabled!");
 	elseif(command == "disable") then
 		ChaosReserves_Disabled = true
-		DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves is now disabled! :-(",1,1,0);
+		Debug_Message("ChaosReserves is now disabled! :-(");
 	elseif(command == "debug") then
-		ChaosReserves_debug = not ChaosReserves_debug 
+		ChaosReserves_debug = not ChaosReserves_debug
 		if ChaosReserves_debug then
-			DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves is now in debugging mode!",1,1,0);
+			Debug_Message("ChaosReserves is now in debugging mode!");
 		else 
-			DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves debugging mode disabled.",1,1,0);
+			Debug_Message("ChaosReserves debugging mode disabled.");
 		end
 	else
 		ChaosReserves_PrintSlashCommandsHelp()
@@ -104,15 +104,15 @@ end
 
 function ChaosReserves_PrintSlashCommandsHelp()
 	local prefix = "   /"..ChaosReserves_SlashCommand.." "
-	DEFAULT_CHAT_FRAME:AddMessage("Use the following commands:",1,1,0)
-	DEFAULT_CHAT_FRAME:AddMessage(prefix.."enable - enable ChaosReserves",1,1,0)
-	DEFAULT_CHAT_FRAME:AddMessage(prefix.."disable - disable ChaosReserves",1,1,0)
-	DEFAULT_CHAT_FRAME:AddMessage(prefix.."debug - toggle debug mode on/off",1,1,0)
+	Debug_Message("Use the following commands:")
+	Debug_Message(prefix.."enable - enable ChaosReserves")
+	Debug_Message(prefix.."disable - disable ChaosReserves")
+	Debug_Message(prefix.."debug - toggle debug mode on/off")
 end
 
 -- Handle the chat commands prefixed with !reserves
 function ChaosReserves_ChatCommandHandler(sender, msg)
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_ChatCommandHandler called with arguments: sender="..sender.." and msg="..msg,1,1,0); end
+	if ChaosReserves_debug then Debug_Message("ChaosReserves_ChatCommandHandler called with arguments: sender="..sender.." and msg="..msg); end
 	local _, _,command, args = string.find(msg, "^!(%w+)%s?(.*)");
 	if(command) then
 		command = strlower(command);
@@ -120,7 +120,7 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 		command = "";
 	end
 	if(command == ChaosReserves_SlashCommand) then
-		if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Chatcommand token detected",1,1,0); end
+		if ChaosReserves_debug then Debug_Message("Chatcommand token detected"); end
 		if (string.find(args, "add%s?")) then
 			_, _, subcommand, altName = string.find(args, "(%w+)%s?(.*)")
 			ChaosReserves_AddReserve(sender, altName)
@@ -152,7 +152,7 @@ function ChaosReserves_WhisperChatCommandsHelp(sender)
 end
 
 function ChaosReserves_LoginLogoutHandler(msg)
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_LoginLogoutHandler called with arguments: msg="..msg,1,1,0); end
+	if ChaosReserves_debug then Debug_Message("ChaosReserves_LoginLogoutHandler called with arguments: msg="..msg); end
 	local player = ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
 	local status = ChaosReserves_findStatusInOnlineOfflineMessage(msg)
 	if status == "online" or status == "offline" then -- short circuit abort if this is not an online/offline system message
@@ -172,27 +172,27 @@ end
 function ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
 	local temp = msg
 	string.gsub(temp, "|Hp[^|]*|h[^|]*|h", "|Hp[^|]*|h[^|]*|h")
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Converted system msg to: "..temp,1,1,0); end
+	if ChaosReserves_debug then Debug_Message("Converted system msg to: "..temp); end
 	local _, _, player = string.find(temp, "(%w+)")
 	if player == "Hplayer" then _, _, player = string.find(temp, "Hplayer:(%w+)"); end -- workaround for hyperlinks in "[xxx] is now online." message...
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found in system message player="..tostring(player),1,1,0); end
+	if ChaosReserves_debug then Debug_Message("Found in system message player="..tostring(player)); end
 	return player
 end
 
 function ChaosReserves_findStatusInOnlineOfflineMessage(msg)
 	local _, _, status = string.find(msg, "(%w+).$")
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found in system message status="..tostring(status),1,1,0); end
+	if ChaosReserves_debug then Debug_Message("Found in system message status="..tostring(status)); end
 	return status
 end
 
 function ChaosReserves_isPlayerInGuild(player)
 	for key, _ in pairs(ChaosReserves_GuildRosterInfoCache) do
 		if key == player then
-			if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Found player="..player.." in guild!",1,1,0); end
+			if ChaosReserves_debug then Debug_Message("Found player="..player.." in guild!"); end
 			return true
 		end
 	end
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("Didn't find player="..player.." in guild!",1,1,0); end
+	if ChaosReserves_debug then Debug_Message("Didn't find player="..player.." in guild!"); end
 	return false
 end
 
@@ -230,7 +230,7 @@ function ChaosReserves_AddReserve(sender, altName)
 end
 
 function ChaosReserves_RemoveReserve(sender, removeName)
-	if ChaosReserves_debug then DEFAULT_CHAT_FRAME:AddMessage("ChaosReserves_RemoveReserve called with arguments: sender="..sender.."; removeName="..tostring(removeName),1,1,0); end
+	if ChaosReserves_debug then Debug_Message("ChaosReserves_RemoveReserve called with arguments: sender="..sender.."; removeName="..tostring(removeName)); end
 	idxToRemove = 1000
 	if removeName and not ChaosReserves_isOfficer(sender) then
 		ChaosReserves_WhisperOfficersOnly(sender)
