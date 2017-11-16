@@ -155,7 +155,7 @@ function ChaosReserves_WhisperChatCommandsHelp(sender)
 	if ChaosReserves_isOfficer(sender) then
 		ChaosReserves_Whisper(sender, prefix.."remove [name] - remove [name] from reserves")
 		ChaosReserves_Whisper(sender, prefix.."force check - force an afk check")
-		ChaosReserves_Whisper(sender, prefix.."leader - after sending this you will be the reserve manager")
+		ChaosReserves_Whisper(sender, prefix.."leader - after sending this you will be the leader")
 	end
 	ChaosReserves_Whisper(sender, prefix.."help - show this help")
 end
@@ -170,7 +170,7 @@ function ChaosReserves_LoginLogoutHandler(msg)
 			if status == "online" then
 				-- print reserves list and announce reserve manager
 				ChaosReserves_PrintReserves()
-				ChaosReserves_AnnounceReserveManager(player)
+				ChaosReserves_AnnounceLeader(player)
 			elseif status == "offline" then
 				-- notice player is offline
 			end
@@ -231,7 +231,7 @@ function ChaosReserves_SetLeader(sender, newLeader)
 			if ChaosReserves_Leader ~= newLeader then
 				ChaosReserves_Leader = newLeader
 				if newLeader == UnitName("player") then
-					ChaosReserves_GuildMessage("I'm the new reserve manager!")
+					ChaosReserves_GuildMessage("I'm the new leader!")
 					ChaosReserves_AddonMessage(ChaosReserves_Topic_Leader, ChaosReserves_Leader)
 				end
 			end
@@ -319,7 +319,7 @@ function ChaosReserves_PrintReserves()
 	ChaosReserves_GuildMessage(msgString)
 end
 
-function ChaosReserves_AnnounceReserveManager(playerToGreet)
+function ChaosReserves_AnnounceLeader(playerToGreet)
 	local myName = UnitName("player")
 	if ChaosReserves_Leader == myName then
 		--TODO ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
