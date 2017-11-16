@@ -9,7 +9,7 @@ ChaosReserves_ReserveListSerializationDelimiter = "#"
 
 -- changeable global variables
 ChaosReserves_Disabled = false
-ChaosReserves_debug = true
+ChaosReserves_debug = false
 
 -- list of current reserves
 ChaosReserves_ReserveList = {}
