@@ -23,7 +23,7 @@ ChaosReserves_Leader = UnitName("player")
 
 --debug function to print all local variables
 function ChaosReserves_DumpVariables()
-	Debug_Message("ChaosReserves_ReserveList: "..ChaosReserves_serializeReserveList());
+	Debug_Message("ChaosReserves_ReserveList: "..ChaosReserves_serializeReserveList(ChaosReserves_ReserveList_Update_Timestamp, ChaosReserves_ReserveList));
 	Debug_Message("ChaosReserves_ReserveList_Update_Timestamp: "..ChaosReserves_ReserveList_Update_Timestamp);
 	Debug_Message("ChaosReserves_Leader: "..ChaosReserves_Leader);
 end
@@ -206,7 +206,7 @@ end
 function ChaosReserves_SendReserveList(sender)
 	if sender ~= UnitName("player") then -- dont answer your own request
 		if ChaosReserves_debug then Debug_Message("Incoming reserve list request..."); end
-		ChaosReserves_AddonMessage(ChaosReserves_Topic_Reservelist, ChaosReserves_serializeReserveList())
+		ChaosReserves_AddonMessage(ChaosReserves_Topic_Reservelist, ChaosReserves_serializeReserveList(ChaosReserves_ReserveList_Update_Timestamp, ChaosReserves_ReserveList))
 		if ChaosReserves_debug then Debug_Message("Finished sending my reserve list!"); end
 	end
 end
@@ -422,9 +422,11 @@ function ChaosReserves_GetGameTime()
 	return h..":"..m..":"..s
 end
 
-function ChaosReserves_serializeReserveList()
-	serializedReserveList = ChaosReserves_serializeMap({["timestamp"]=ChaosReserves_ReserveList_Update_Timestamp}) .. ChaosReserves_ReserveListSerializationDelimiter
-	for _, reserve in ipairs(ChaosReserves_ReserveList) do
+function ChaosReserves_serializeReserveList(timestamp, reserveList)
+	timeStampMap = {}
+	timeStampMap["timestamp"] = timestamp
+	serializedReserveList = ChaosReserves_serializeMap(timeStampMap) .. ChaosReserves_ReserveListSerializationDelimiter
+	for _, reserve in ipairs(reserveList) do
 		serializedReserveList = serializedReserveList .. ChaosReserves_serializeMap(reserve) .. ChaosReserves_ReserveListSerializationDelimiter
 	end
 	return serializedReserveList
@@ -433,13 +435,13 @@ end
 function ChaosReserves_deserializeReserveList(serialize)
 	reservelist = {}
 	splitResultList = ChaosReserves_strsplit(serialize, ChaosReserves_ReserveListSerializationDelimiter)
-	timeStampKeyValuePair = ChaosReserves_deserializeMap(splitResultList[1])
-	ChaosReserves_ReserveList_Update_Timestamp = timeStampKeyValuePair["timestamp"]
+	local timeStampKeyValuePair = ChaosReserves_deserializeMap(splitResultList[1])
+	local timestamp = timeStampKeyValuePair["timestamp"]
 	for i=2, getn(splitResultList) do
 		reserve = ChaosReserves_deserializeMap(splitResultList[i])
 		tinsert(reservelist, reserve)
 	end
-	ChaosReserves_ReserveList = reservelist
+	return timestamp, reservelist
 end
 
 function ChaosReserves_serializeMap(map)
