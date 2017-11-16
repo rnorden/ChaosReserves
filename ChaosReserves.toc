@@ -2,5 +2,6 @@
 ## Title: ChaosReserves
 ## Notes: Self-service reserve managing chatbot
 ## Version: 0.1
+## SavedVariables: ChaosReserves_ReserveList, ChaosReserves_Leader
 
 ChaosReserves.lua
