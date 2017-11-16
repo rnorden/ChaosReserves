@@ -19,6 +19,12 @@ ChaosReserves_GuildRosterInfoCache = {}
 -- this is the reserve manager (leader)
 ChaosReserves_Leader = UnitName("player")
 
+--debug function to print all local variables
+function ChaosReserves_DumpVariables()
+	Debug_Message("ChaosReserves_ReserveList: "..ChaosReserves_serializeReserveList());
+	Debug_Message("ChaosReserves_Leader: "..ChaosReserves_Leader);
+end
+
 function ChaosReserves_InitGuildRosterInfoCache()
 	ChaosReserves_GuildRosterInfoCache = {}
 	SetGuildRosterShowOffline(true) -- include offline guildies
