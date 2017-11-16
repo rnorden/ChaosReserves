@@ -197,7 +197,7 @@ function ChaosReserves_ChatAddonMessageHandler(prefix, message, channel, sender)
 	end
 end
 
-function ChaosReserves_RequestReserveList(sender)
+function ChaosReserves_RequestReserveList()
 	ChaosReserves_AddonMessage(ChaosReserves_Topic_Reservelist, ChaosReserves_TopicReservelist_Request)
 end
 
