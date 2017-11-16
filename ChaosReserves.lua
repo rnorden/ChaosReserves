@@ -326,6 +326,10 @@ function ChaosReserves_Whisper(recipient, msg)
 	SendChatMessage(msg, "WHISPER", nil, recipient)
 end
 
+function Debug_Message(msg)
+	DEFAULT_CHAT_FRAME:AddMessage(msg,1,1,0);
+end
+
 function ChaosReserves_GetGameTime()
 	local h,m = GetGameTime()
 	local s = getCurrentTimeInUTC()
