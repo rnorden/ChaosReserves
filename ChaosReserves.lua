@@ -197,8 +197,12 @@ function ChaosReserves_ChatAddonMessageHandler(prefix, message, channel, sender)
 	end
 end
 
-function ChaosReserves_SendReserveList(sender)
+function ChaosReserves_RequestReserveList(sender)
+	ChaosReserves_AddonMessage(ChaosReserves_Topic_Reservelist, ChaosReserves_TopicReservelist_Request)
+end
 
+function ChaosReserves_SendReserveList(sender)
+	ChaosReserves_AddonMessage(ChaosReserves_Topic_Reservelist, ChaosReserves_serializeReserveList())
 end
 
 function ChaosReserves_ProcessIncomingReserveList(reserveList)
