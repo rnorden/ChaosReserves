@@ -8,7 +8,7 @@ ChaosReserves_SerializationDelimiter = "§"
 ChaosReserves_ReserveListSerializationDelimiter = "#"
 
 -- changeable global variables
-ChaosReserves_Disabled = false
+ChaosReserves_Disabled = true
 ChaosReserves_debug = false
 
 -- list of current reserves
@@ -52,11 +52,14 @@ function ChaosReserves_InitGuildRosterInfoCache()
 	end
 end
 
-function ChaosReserves_Init(f)
-	f:RegisterEvent("CHAT_MSG_ADDON");
-	f:RegisterEvent("CHAT_MSG_GUILD"); -- messages in guild chat
-	f:RegisterEvent("CHAT_MSG_SYSTEM"); -- online/offline system messages
-	--f:RegisterEvent("GUILD_ROSTER_UPDATE"); -- updates to the guild TODO: this is fired way too often, we need to switch to listening to system messages too.
+ChaosReserves_ListenEvents = {
+	"CHAT_MSG_ADDON", 
+	"CHAT_MSG_GUILD", -- messages in guild chat
+	"CHAT_MSG_SYSTEM", -- online/offline system messages
+	--"GUILD_ROSTER_UPDATE", -- updates to the guild TODO: this is fired way too often, we need to switch to listening to system messages too.
+}
+
+function ChaosReserves_Init(f)	
 	f:SetScript("OnEvent", function()
 		ChaosReserves_EventHandlers(event)
 	end
@@ -66,6 +69,18 @@ function ChaosReserves_Init(f)
 	Debug_Message("ChaosReserves loaded. Have fun raiding!");
 	ChaosReserves_InitGuildRosterInfoCache()
 	ChaosReserves_RequestReserveList()
+end
+
+function ChaosReserves_RegisterEvents(f, events)
+	for i=1, getn(events) do
+		f:RegisterEvent(events[i])
+	end
+end
+
+function ChaosReserves_UnregisterEvents(f, events)
+	for i=1, getn(events) do
+		f:UnregisterEvent(events[i])
+	end
 end
 
 -- Event handling
@@ -93,9 +108,11 @@ function ChaosReserves_SlashHandler(arg1)
 	end
 	if(command == "enable") then
 		ChaosReserves_Disabled = false;
+		ChaosReserves_RegisterEvents(ChaosReserves_Frame, ChaosReserves_ListenEvents) -- start listening to events
 		Debug_Message("ChaosReserves is now enabled!");
 	elseif(command == "disable") then
 		ChaosReserves_Disabled = true
+		ChaosReserves_UnregisterEvents(ChaosReserves_Frame, ChaosReserves_ListenEvents) -- stop listening to events
 		Debug_Message("ChaosReserves is now disabled! :-(");
 	elseif(command == "debug") then
 		ChaosReserves_debug = not ChaosReserves_debug
@@ -560,5 +577,5 @@ function getCurrentTimeInUTC()
 end
 
 -- bootstrap the Addon by creating a frame and passing it to the ChaosReserves_Init function
-local f = CreateFrame("Frame",nil,UIParent)
-ChaosReserves_Init(f)
+ChaosReserves_Frame = CreateFrame("Frame",nil,UIParent)
+ChaosReserves_Init(ChaosReserves_Frame)
