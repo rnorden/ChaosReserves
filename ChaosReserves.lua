@@ -102,6 +102,8 @@ function ChaosReserves_SlashHandler(arg1)
 		else 
 			Debug_Message("ChaosReserves debugging mode disabled.");
 		end
+	elseif(command == "dumpvars") then
+		ChaosReserves_DumpVariables()
 	else
 		ChaosReserves_PrintSlashCommandsHelp()
 	end
@@ -113,6 +115,7 @@ function ChaosReserves_PrintSlashCommandsHelp()
 	Debug_Message(prefix.."enable - enable ChaosReserves")
 	Debug_Message(prefix.."disable - disable ChaosReserves")
 	Debug_Message(prefix.."debug - toggle debug mode on/off")
+	Debug_Message(prefix.."dumpvars - dump some variables to your chatwindow")
 end
 
 -- Handle the chat commands prefixed with !reserves
