@@ -39,8 +39,13 @@ function ChaosReserves_InitGuildRosterInfoCache()
 	end
 	if ChaosReserves_debug then 
 		local idxName = UnitName("player")
-		local itemString = "name: "..ChaosReserves_GuildRosterInfoCache[idxName]["name"].." rank: "..ChaosReserves_GuildRosterInfoCache[idxName]["rank"].." rankIndex: "..ChaosReserves_GuildRosterInfoCache[idxName]["rankIndex"].." class: "..ChaosReserves_GuildRosterInfoCache[idxName]["class"]
-		DEFAULT_CHAT_FRAME:AddMessage("Example GuildRosterInfoCache item: "..itemString,1,1,0)
+		local me = ChaosReserves_GuildRosterInfoCache[idxName]
+		if me then
+			local itemString = "name: "..me["name"].." rank: "..me["rank"].." rankIndex: "..me["rankIndex"].." class: "..me["class"]
+			Debug_Message("Example GuildRosterInfoCache item: "..itemString)
+		else
+			Debug_Message(ChaosReserve_GetColoredString("ChaosReserves: Couldn't read the guild roster!", "FF0000"))
+		end
 	end
 end
 
@@ -198,7 +203,7 @@ end
 
 function ChaosReserves_isOfficer(player)
 	local playerGuildInfo = ChaosReserves_GuildRosterInfoCache[player]
-	if ChaosReserves_GuildRosterInfoCache[player]["rankIndex"] < 2 then
+	if playerGuildInfo ~= nil and playerGuildInfo["rankIndex"] < 2 then
 		return true
 	end
 	return false
@@ -279,7 +284,8 @@ end
 
 function ChaosReserves_getMainAndAltNameString(reserve)
 	ret = reserve["name"]
-	class = ChaosReserves_GuildRosterInfoCache[ret]["class"]
+	local playerGuildInfo = ChaosReserves_GuildRosterInfoCache[ret]
+	class = nil; if playerGuildInfo then class = playerGuildInfo["class"]; end
 	--ret = ChaosReserve_GetClickableLink(ret, ChaosReserve_GetColoredString(ret, ChaosReserves_GetColorCodeForClass(class))) --funktioniert nicht
 	ret = ChaosReserve_GetColoredString(ChaosReserve_GetClickableLink(ret, ret), ChaosReserves_GetColorCodeForClass(class))
 	if reserve["altname"] ~= nil then
@@ -315,6 +321,8 @@ function ChaosReserves_GetColorCodeForClass(class)
 		return "9482C9"
 	elseif class == "Warrior" then
 		return "C79C6E"
+	else
+		return "40FBf0" -- guild chat color as fallback
 	end
 end
 
