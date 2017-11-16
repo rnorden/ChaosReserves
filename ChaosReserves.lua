@@ -188,13 +188,21 @@ function ChaosReserves_ChatAddonMessageHandler(prefix, message, channel, sender)
 			if (message == ChaosReserves_Topic_Reservelist_Request) then
 				ChaosReserves_SendReserveList(sender)
 			else
-				ChaosReserves_ParseReserveListString(message)
+				ChaosReserves_ProcessIncomingReserveList(message)
 			end
 		elseif (topic == ChaosReserves_Topic_Leader) then
 			if ChaosReserves_debug then Debug_Message("Received leader message: "..string.sub(message,1,100)); end
 			ChaosReserves_SetLeader(sender, message)
 		end
 	end
+end
+
+function ChaosReserves_SendReserveList(sender)
+
+end
+
+function ChaosReserves_ProcessIncomingReserveList(reserveList)
+
 end
 
 function ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
