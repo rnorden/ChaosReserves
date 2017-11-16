@@ -10,6 +10,7 @@ ChaosReserves_ReserveListSerializationDelimiter = "#"
 -- changeable global variables
 ChaosReserves_Disabled = false
 ChaosReserves_debug = true
+
 -- list of current reserves
 ChaosReserves_ReserveList = {}
 
@@ -67,7 +68,9 @@ end
 -- Event handling
 function ChaosReserves_EventHandlers(event)
 	if ChaosReserves_Disabled then return end
-	if event == "CHAT_MSG_GUILD" then
+	if event == "CHAT_MSG_ADDON" then
+		ChaosReserves_ChatAddonMessageHandler(arg1, arg2, arg3, arg4)
+	elseif event == "CHAT_MSG_GUILD" then
 		ChaosReserves_ChatCommandHandler(arg2, arg1);
 	elseif event == "CHAT_MSG_SYSTEM" then
 		ChaosReserves_LoginLogoutHandler(arg1);
@@ -134,6 +137,8 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 			ChaosReserves_RemoveReserve(sender, name)
 		elseif (args == "list") then
 			ChaosReserves_PrintReserves()
+		elseif (args == "leader") then
+			ChaosReserves_SetLeader(sender, nil)
 		else
 			ChaosReserves_WhisperChatCommandsHelp(sender)
 		end
@@ -173,6 +178,25 @@ function ChaosReserves_LoginLogoutHandler(msg)
 	end
 end
 
+function ChaosReserves_ChatAddonMessageHandler(prefix, message, channel, sender)
+	-- is this message for me?
+	local prefix = string.sub(arg1,1,strlen(ChaosReserves_AddonMsgPrefix))
+	local topic = string.sub(arg1,strlen(ChaosReserves_AddonMsgPrefix)+1)
+	if  (prefix == ChaosReserves_AddonMsgPrefix) then
+		if ChaosReserves_debug then Debug_Message("Received addon msg on topic ("..topic.."): "..string.sub(message,1,100)); end
+		if (topic == ChaosReserves_Topic_Reservelist) then
+			if (message == ChaosReserves_Topic_Reservelist_Request) then
+				ChaosReserves_SendReserveList(sender)
+			else
+				ChaosReserves_ParseReserveListString(message)
+			end
+		elseif (topic == ChaosReserves_Topic_Leader) then
+			if ChaosReserves_debug then Debug_Message("Received leader message: "..string.sub(message,1,100)); end
+			ChaosReserves_SetLeader(sender, message)
+		end
+	end
+end
+
 function ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
 	local temp = msg
 	string.gsub(temp, "|Hp[^|]*|h[^|]*|h", "|Hp[^|]*|h[^|]*|h")
@@ -198,6 +222,23 @@ function ChaosReserves_isPlayerInGuild(player)
 	end
 	if ChaosReserves_debug then Debug_Message("Didn't find player="..player.." in guild!"); end
 	return false
+end
+
+function ChaosReserves_SetLeader(sender, newLeader)
+	if newLeader == nil then newLeader = UnitName("player") end
+	if ChaosReserves_isOfficer(sender) then
+		if ChaosReserves_isOfficer(newLeader) then
+			if ChaosReserves_Leader ~= newLeader then
+				ChaosReserves_Leader = newLeader
+				if newLeader == UnitName("player") then
+					ChaosReserves_GuildMessage("I'm the new reserve manager!")
+					ChaosReserves_AddonMessage(ChaosReserves_Topic_Leader, ChaosReserves_Leader)
+				end
+			end
+		end
+	else
+		ChaosReserves_WhisperOfficersOnly(sender)
+	end
 end
 
 function ChaosReserves_isOfficer(player)
@@ -335,6 +376,10 @@ end
 
 function ChaosReserves_Whisper(recipient, msg)
 	SendChatMessage(msg, "WHISPER", nil, recipient)
+end
+
+function ChaosReserves_AddonMessage(topic, msg)
+	SendAddonMessage(ChaosReserves_AddonMsgPrefix..topic, msg, "GUILD")
 end
 
 function Debug_Message(msg)
