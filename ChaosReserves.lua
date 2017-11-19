@@ -33,11 +33,12 @@ function ChaosReserves_InitGuildRosterInfoCache()
 	ChaosReserves_GuildRosterInfoCache = {}
 	SetGuildRosterShowOffline(true) -- include offline guildies
 	for i=1, GetNumGuildMembers() do
-		local name, rank, rankIndex, _, class = GetGuildRosterInfo(i);
+		local name, rank, rankIndex, level, class = GetGuildRosterInfo(i);
 		ChaosReserves_GuildRosterInfoCache[name] = {
 			name = name,
 			rank = rank,
 			rankIndex = rankIndex,
+			level = level,
 			class = class
 		}
 	end
@@ -209,7 +210,7 @@ function ChaosReserves_LoginLogoutHandler(msg)
 	if status == "online" or status == "offline" then -- short circuit abort if this is not an online/offline system message
 		isGuildie = ChaosReserves_isPlayerInGuild(player)
 		if isGuildie then
-			if status == "online" and UnitLevel(player) == 60 and not ChaosReserves_IsPlayerInRaid(player) then
+			if status == "online" and ChaosReserves_GetPlayerLevel(player) == 60 and not ChaosReserves_IsPlayerInRaid(player) then
 				-- print reserves list and announce reserve manager
 				ChaosReserves_PrintReserves()
 				ChaosReserves_AnnounceLeader(player)
@@ -218,6 +219,15 @@ function ChaosReserves_LoginLogoutHandler(msg)
 			end
 		end
 	end
+end
+
+function ChaosReserves_GetPlayerLevel(player)
+	for key, _ in pairs(ChaosReserves_GuildRosterInfoCache) do
+		if key == player then
+			return ChaosReserves_GuildRosterInfoCache[player]["level"]
+		end
+	end
+	return nil
 end
 
 function ChaosReserves_ChatAddonMessageHandler(prefix, message, channel, sender)
