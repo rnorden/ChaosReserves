@@ -115,32 +115,34 @@ function ChaosReserves_SlashHandler(arg1)
 	if (command ~= "enable" and ChaosReserves_Disabled) then
 		Debug_Message("ChaosReserves is currently disabled. Enable first please!")
 	elseif(command == "enable") then
-		ChaosReserves_Disabled = false;
-		ChaosReserves_RegisterEvents(ChaosReserves_Frame, ChaosReserves_ListenEvents) -- start listening to events
-		ChaosReserves_InitGuildRosterInfoCache()
-		ChaosReserves_RequestReserveList()
-		Debug_Message("ChaosReserves is now enabled!");
-	elseif(command == "disable") then
-		ChaosReserves_Disabled = true
-		ChaosReserves_UnregisterEvents(ChaosReserves_Frame, ChaosReserves_ListenEvents) -- stop listening to events
-		Debug_Message("ChaosReserves is now disabled! :-(");
-	elseif(command == "wipe") then
-		ChaosReserves_WipeReserves()
-	elseif(command == "forceguildupdate") then
-		Debug_Message("Updating GuildRosterInfoCache...")
-		ChaosReserves_InitGuildRosterInfoCache()
-		Debug_Message("Done!")
-	elseif(command == "debug") then
-		ChaosReserves_debug = not ChaosReserves_debug
-		if ChaosReserves_debug then
-			Debug_Message("ChaosReserves is now in debugging mode!");
-		else 
-			Debug_Message("ChaosReserves debugging mode disabled.");
-		end
-	elseif(command == "dumpvars") then
-		ChaosReserves_DumpVariables()
+			ChaosReserves_Disabled = false;
+			ChaosReserves_RegisterEvents(ChaosReserves_Frame, ChaosReserves_ListenEvents) -- start listening to events
+			ChaosReserves_InitGuildRosterInfoCache()
+			ChaosReserves_RequestReserveList()
+			Debug_Message("ChaosReserves is now enabled!");
 	else
-		ChaosReserves_PrintSlashCommandsHelp()
+		if(command == "disable") then
+			ChaosReserves_Disabled = true
+			ChaosReserves_UnregisterEvents(ChaosReserves_Frame, ChaosReserves_ListenEvents) -- stop listening to events
+			Debug_Message("ChaosReserves is now disabled! :-(");
+		elseif(command == "wipe") then
+			ChaosReserves_WipeReserves()
+		elseif(command == "forceguildupdate") then
+			Debug_Message("Updating GuildRosterInfoCache...")
+			ChaosReserves_InitGuildRosterInfoCache()
+			Debug_Message("Done!")
+		elseif(command == "debug") then
+			ChaosReserves_debug = not ChaosReserves_debug
+			if ChaosReserves_debug then
+				Debug_Message("ChaosReserves is now in debugging mode!");
+			else
+				Debug_Message("ChaosReserves debugging mode disabled.");
+			end
+		elseif(command == "dumpvars") then
+			ChaosReserves_DumpVariables()
+		else
+			ChaosReserves_PrintSlashCommandsHelp()
+		end
 	end
 end
 
