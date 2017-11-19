@@ -201,7 +201,7 @@ function ChaosReserves_LoginLogoutHandler(msg)
 	if status == "online" or status == "offline" then -- short circuit abort if this is not an online/offline system message
 		isGuildie = ChaosReserves_isPlayerInGuild(player)
 		if isGuildie then
-			if status == "online" then
+			if status == "online" and not ChaosReserves_IsPlayerInRaid(player) then
 				-- print reserves list and announce reserve manager
 				ChaosReserves_PrintReserves()
 				ChaosReserves_AnnounceLeader(player)
@@ -418,7 +418,7 @@ function ChaosReserves_PrintReserves()
 end
 
 function ChaosReserves_AnnounceLeader(playerToGreet)
-	if ChaosReserves_ImTheLeader() and ChaosReserves_IsPlayerInRaid(UnitName("player")) and not ChaosReserves_IsPlayerInRaid(player) then
+	if ChaosReserves_ImTheLeader() and ChaosReserves_IsPlayerInRaid(UnitName("player")) then
 		ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
 	end
 end
