@@ -418,9 +418,19 @@ function ChaosReserves_PrintReserves()
 end
 
 function ChaosReserves_AnnounceLeader(playerToGreet)
-	if ChaosReserves_ImTheLeader() then
+	if ChaosReserves_ImTheLeader() and ChaosReserves_IsPlayerInRaid(UnitName("player")) and not ChaosReserves_IsPlayerInRaid(player) then
 		ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
 	end
+end
+
+function ChaosReserves_IsPlayerInRaid(player)
+	for i=1, GetNumRaidMembers() do
+		name = GetRaidRosterInfo(i);
+		if name == player then
+			return true
+		end
+	end
+	return false
 end
 
 function ChaosReserves_getMainAndAltNameString(reserve)
