@@ -1,5 +1,6 @@
 -- global static variables
-ChaosReserves_SlashCommand = "reserves"
+ChaosReserves_SlashCommand1 = "reserves"
+ChaosReserves_SlashCommand2 = "cr"
 ChaosReserves_AddonMsgPrefix = "CHAOSRESERVES"
 ChaosReserves_Topic_Leader = "LEADER"
 ChaosReserves_Topic_Reservelist = "RESERVELIST"
@@ -65,7 +66,8 @@ function ChaosReserves_Init(f)
 		ChaosReserves_EventHandlers(event)
 	end
 	)
-	SLASH_CHAOSRESERVES1 = "/"..ChaosReserves_SlashCommand;
+	SLASH_CHAOSRESERVES1 = "/"..ChaosReserves_SlashCommand1;
+	SLASH_CHAOSRESERVES2 = "/"..ChaosReserves_SlashCommand2;
 	SlashCmdList["CHAOSRESERVES"] = function(args) ChaosReserves_SlashHandler(args); end;
 	Debug_Message("ChaosReserves loaded. Have fun raiding!");
 	ChaosReserves_InitGuildRosterInfoCache()
@@ -140,7 +142,7 @@ function ChaosReserves_SlashHandler(arg1)
 end
 
 function ChaosReserves_PrintSlashCommandsHelp()
-	local prefix = "   /"..ChaosReserves_SlashCommand.." "
+	local prefix = "   /"..ChaosReserves_SlashCommand1.." "
 	Debug_Message("Use the following commands:")
 	Debug_Message(prefix.."enable - enable ChaosReserves")
 	Debug_Message(prefix.."disable - disable ChaosReserves")
@@ -159,7 +161,7 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 	else
 		command = "";
 	end
-	if(command == ChaosReserves_SlashCommand) then
+	if(command == ChaosReserves_SlashCommand1 or command == ChaosReserves_SlashCommand2) then
 		if ChaosReserves_debug then Debug_Message("Chatcommand token detected"); end
 		if (string.find(args, "add%s?")) then
 			_, _, subcommand, altName = string.find(args, "(%w+)%s?(.*)")
@@ -184,7 +186,7 @@ end
 
 function ChaosReserves_WhisperChatCommandsHelp(sender)
 	ChaosReserves_Whisper(sender, "Use something like: ")
-	local prefix = "   !"..ChaosReserves_SlashCommand.." "
+	local prefix = "   !"..ChaosReserves_SlashCommand1.." "
 	ChaosReserves_Whisper(sender, prefix.."add [altname] - add yourself with an optional altname if you're saving buffs")
 	ChaosReserves_Whisper(sender, prefix.."list - list the current reserve list")
 	ChaosReserves_Whisper(sender, prefix.."remove - remove yourself")
@@ -421,7 +423,7 @@ end
 
 function ChaosReserves_AnnounceLeader(playerToGreet)
 	if ChaosReserves_ImTheLeader() and ChaosReserves_IsPlayerInRaid(UnitName("player")) then
-		ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand.." add");
+		ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand1.." add");
 	end
 end
 
