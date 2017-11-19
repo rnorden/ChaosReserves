@@ -172,6 +172,8 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 			ChaosReserves_PrintReserves()
 		elseif (args == "leader") then
 			ChaosReserves_SetLeader(sender, nil)
+		elseif (args == "moinmoin") then
+			ChaosReserves_GuildMessage("Moin, "..sender.."!")
 		else
 			ChaosReserves_WhisperChatCommandsHelp(sender)
 		end
