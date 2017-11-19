@@ -437,7 +437,7 @@ function ChaosReserves_PrintReserves()
 end
 
 function ChaosReserves_AnnounceLeader(playerToGreet)
-	if ChaosReserves_ImTheLeader() and ChaosReserves_IsPlayerInRaid(UnitName("player")) then
+	if ChaosReserves_ImTheLeader() then
 		ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand1.." add");
 	end
 end
