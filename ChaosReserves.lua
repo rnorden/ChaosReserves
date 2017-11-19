@@ -121,6 +121,10 @@ function ChaosReserves_SlashHandler(arg1)
 		Debug_Message("ChaosReserves is now disabled! :-(");
 	elseif(command == "wipe") then
 		ChaosReserves_WipeReserves()
+	elseif(command == "forceguildupdate")
+		Debug_Message("Updating GuildRosterInfoCache...")
+		ChaosReserves_InitGuildRosterInfoCache()
+		Debug_Message("Done!")
 	elseif(command == "debug") then
 		ChaosReserves_debug = not ChaosReserves_debug
 		if ChaosReserves_debug then
@@ -141,6 +145,7 @@ function ChaosReserves_PrintSlashCommandsHelp()
 	Debug_Message(prefix.."enable - enable ChaosReserves")
 	Debug_Message(prefix.."disable - disable ChaosReserves")
 	Debug_Message(prefix.."wipe - wipe the reserves list")
+	Debug_Message(prefix.."forceguildupdate - force updating the guild info cache")
 	Debug_Message(prefix.."debug - toggle debug mode on/off")
 	Debug_Message(prefix.."dumpvars - dump some variables to your chatwindow")
 end
