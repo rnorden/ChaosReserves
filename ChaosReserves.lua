@@ -175,7 +175,11 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 		elseif (args == "leader") then
 			ChaosReserves_SetLeader(sender, nil)
 		elseif (args == "moinmoin") then
-			ChaosReserves_GuildMessage("Moin, "..sender.."!")
+			if mod(time(),10)==0 then
+				ChaosReserves_GuildMessage("Pucchini is the best! <3")
+			else
+				ChaosReserves_GuildMessage("Moin, "..sender.."!")
+			end
 		else
 			ChaosReserves_WhisperChatCommandsHelp(sender)
 		end
