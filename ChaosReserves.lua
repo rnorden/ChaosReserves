@@ -501,7 +501,7 @@ function ChaosReserves_GetGameTime()
 	if strlen(h) == 1 then h = "0"..h end
 	if strlen(m) == 1 then m = "0"..m end
 	if strlen(s) == 1 then s = "0"..s end
-	return h..":"..m..":"..s
+	return h..":"..m --..":"..s
 end
 
 function ChaosReserves_serializeReserveList(timestamp, reserveList)
