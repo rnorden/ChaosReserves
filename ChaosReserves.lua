@@ -364,6 +364,7 @@ end
 
 function ChaosReserves_RemoveReserve(sender, removeName)
 	if ChaosReserves_ImTheLeader() then
+		nameToRemove = "" --define variable here for scope...
 		if ChaosReserves_debug then Debug_Message("ChaosReserves_RemoveReserve called with arguments: sender="..sender.."; removeName="..tostring(removeName)); end
 		idxToRemove = 1000
 		if removeName and not ChaosReserves_isOfficer(sender) then
