@@ -119,6 +119,8 @@ function ChaosReserves_SlashHandler(arg1)
 		ChaosReserves_Disabled = true
 		ChaosReserves_UnregisterEvents(ChaosReserves_Frame, ChaosReserves_ListenEvents) -- stop listening to events
 		Debug_Message("ChaosReserves is now disabled! :-(");
+	elseif(command == "wipe") then
+		ChaosReserves_WipeReserves()
 	elseif(command == "debug") then
 		ChaosReserves_debug = not ChaosReserves_debug
 		if ChaosReserves_debug then
@@ -138,6 +140,7 @@ function ChaosReserves_PrintSlashCommandsHelp()
 	Debug_Message("Use the following commands:")
 	Debug_Message(prefix.."enable - enable ChaosReserves")
 	Debug_Message(prefix.."disable - disable ChaosReserves")
+	Debug_Message(prefix.."wipe - wipe the reserves list")
 	Debug_Message(prefix.."debug - toggle debug mode on/off")
 	Debug_Message(prefix.."dumpvars - dump some variables to your chatwindow")
 end
@@ -244,6 +247,14 @@ function ChaosReserves_ProcessIncomingReserveList(sender, serializedReserveList)
 			ChaosReserves_ReserveList = reserveList
 			Debug_Message("Updated reserve list with "..sender.."'s!")
 		end
+	end
+end
+
+function ChaosReserves_WipeReserves()
+	if ChaosReserves_ImTheLeader() then
+		ChaosReserves_ReserveList = {}
+		ChaosReserves_GuildMessage("I wiped the reserves list!")
+		ChaosReserves_CallbackReservesUpdated()
 	end
 end
 
