@@ -1,7 +1,7 @@
 ## Interface: 11200
 ## Title: ChaosReserves
 ## Notes: Self-service reserve managing chatbot
-## Version: 0.1
+## Version: 0.3
 ## SavedVariables: ChaosReserves_ReserveList, ChaosReserves_Leader, ChaosReserves_Disabled, ChaosReserves_debug
 
 ChaosReserves.lua
