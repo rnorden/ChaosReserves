@@ -480,7 +480,7 @@ function ChaosReserves_AddonMessage(topic, msg)
 end
 
 function Debug_Message(msg)
-	DEFAULT_CHAT_FRAME:AddMessage(msg,1,1,0);
+	DEFAULT_CHAT_FRAME:AddMessage(tostring(msg),1,1,0);
 end
 
 function ChaosReserves_GetGameTime()
