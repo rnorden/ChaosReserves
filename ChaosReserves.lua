@@ -121,7 +121,7 @@ function ChaosReserves_SlashHandler(arg1)
 		Debug_Message("ChaosReserves is now disabled! :-(");
 	elseif(command == "wipe") then
 		ChaosReserves_WipeReserves()
-	elseif(command == "forceguildupdate")
+	elseif(command == "forceguildupdate") then
 		Debug_Message("Updating GuildRosterInfoCache...")
 		ChaosReserves_InitGuildRosterInfoCache()
 		Debug_Message("Done!")
