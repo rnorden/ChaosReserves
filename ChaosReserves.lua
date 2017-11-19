@@ -203,7 +203,7 @@ function ChaosReserves_LoginLogoutHandler(msg)
 	if status == "online" or status == "offline" then -- short circuit abort if this is not an online/offline system message
 		isGuildie = ChaosReserves_isPlayerInGuild(player)
 		if isGuildie then
-			if status == "online" and not ChaosReserves_IsPlayerInRaid(player) then
+			if status == "online" and UnitLevel(player) == 60 and not ChaosReserves_IsPlayerInRaid(player) then
 				-- print reserves list and announce reserve manager
 				ChaosReserves_PrintReserves()
 				ChaosReserves_AnnounceLeader(player)
