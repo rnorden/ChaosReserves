@@ -112,7 +112,9 @@ function ChaosReserves_SlashHandler(arg1)
 	else
 		command = "";
 	end
-	if(command == "enable") then
+	if (command ~= "enable" and ChaosReserves_Disabled) then
+		Debug_Message("ChaosReserves is currently disabled. Enable first please!")
+	elseif(command == "enable") then
 		ChaosReserves_Disabled = false;
 		ChaosReserves_RegisterEvents(ChaosReserves_Frame, ChaosReserves_ListenEvents) -- start listening to events
 		ChaosReserves_InitGuildRosterInfoCache()
