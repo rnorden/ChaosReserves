@@ -97,7 +97,7 @@ function ChaosReserves_EventHandlers(event)
 	elseif event == "CHAT_MSG_GUILD" then
 		ChaosReserves_ChatCommandHandler(arg2, arg1);
 	elseif event == "CHAT_MSG_SYSTEM" then
-		ChaosReserves_LoginLogoutHandler(arg1);
+		--ChaosReserves_LoginLogoutHandler(arg1);
 	elseif event == "CHANNEL_ROSTER_UPDATE" then
 		ChaosReserves_InitGuildRosterInfoCache(); -- reinitialize the guild info cache
 	end
@@ -207,6 +207,7 @@ function ChaosReserves_WhisperChatCommandsHelp(sender)
 	ChaosReserves_Whisper(sender, prefix.."help - show this help")
 end
 
+--[[ --not used because it's to spammy... maybe memorizing who is already whispered would fix this.
 function ChaosReserves_LoginLogoutHandler(msg)
 	if ChaosReserves_debug then Debug_Message("ChaosReserves_LoginLogoutHandler called with arguments: msg="..msg); end
 	local player = ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
@@ -224,6 +225,7 @@ function ChaosReserves_LoginLogoutHandler(msg)
 		end
 	end
 end
+--]]
 
 function ChaosReserves_GetPlayerLevel(player)
 	for key, _ in pairs(ChaosReserves_GuildRosterInfoCache) do
