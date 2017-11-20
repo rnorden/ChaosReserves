@@ -127,6 +127,8 @@ function ChaosReserves_SlashHandler(arg1)
 			Debug_Message("ChaosReserves is now disabled! :-(");
 		elseif(command == "wipe") then
 			ChaosReserves_WipeReserves()
+		elseif(command == "list") then
+			ChaosReserves_DumpReservesList()
 		elseif(command == "forceguildupdate") then
 			Debug_Message("Updating GuildRosterInfoCache...")
 			ChaosReserves_InitGuildRosterInfoCache()
@@ -152,6 +154,7 @@ function ChaosReserves_PrintSlashCommandsHelp()
 	Debug_Message(prefix.."enable - enable ChaosReserves")
 	Debug_Message(prefix.."disable - disable ChaosReserves")
 	Debug_Message(prefix.."wipe - wipe the reserves list")
+	Debug_Message(prefix.."list - list the reserves to yourself")
 	Debug_Message(prefix.."forceguildupdate - force updating the guild info cache")
 	Debug_Message(prefix.."debug - toggle debug mode on/off")
 	Debug_Message(prefix.."dumpvars - dump some variables to your chatwindow")
@@ -416,32 +419,40 @@ end
 
 function ChaosReserves_PrintReserves()
 	if ChaosReserves_ImTheLeader() then
-		numberOfReserves = getn(ChaosReserves_ReserveList)
-		msgString = "Current reserves (" .. numberOfReserves .. "): "
-		if numberOfReserves > 0 then
-			for idx, reserve in ipairs(ChaosReserves_ReserveList) do
-				tempMsgString = msgString .. ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
+		ChaosReserves_BuildReservesString(ChaosReserves_GuildMessage)
+	end
+end
+
+function ChaosReserves_DumpReservesList()
+	ChaosReserves_BuildReservesString(Debug_Message)
+end
+
+function ChaosReserves_BuildReservesString(printFunction)
+	numberOfReserves = getn(ChaosReserves_ReserveList)
+	msgString = "Current reserves (" .. numberOfReserves .. "): "
+	if numberOfReserves > 0 then
+		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
+			tempMsgString = msgString .. ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
+			if idx < numberOfReserves then
+				-- more reserves in the list, add separator
+				tempMsgString = tempMsgString .. ", "
+			end
+			if (strlen(tempMsgString) > 255) then --prematurely send a message because there's a 255 char limit
+				printFunction(msgString)
+				-- overwrite the existing msgString because it has been sent already
+				msgString = ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
 				if idx < numberOfReserves then
 					-- more reserves in the list, add separator
-					tempMsgString = tempMsgString .. ", "
+					msgString = msgString .. ", "
 				end
-				if (strlen(tempMsgString) > 255) then --prematurely send a message because there's a 255 char limit
-					ChaosReserves_GuildMessage(msgString)
-					-- overwrite the existing msgString because it has been sent already
-					msgString = ChaosReserves_getMainAndAltNameString(reserve) .. " (" .. reserve["datetime"] .. ")"
-					if idx < numberOfReserves then
-						-- more reserves in the list, add separator
-						msgString = msgString .. ", "
-					end
-				else
-					msgString = tempMsgString
-				end
+			else
+				msgString = tempMsgString
 			end
-		else
-			msgString = msgString .. "None!"
 		end
-		ChaosReserves_GuildMessage(msgString)
+	else
+		msgString = msgString .. "None!"
 	end
+	printFunction(msgString)
 end
 
 --[[ --not used
