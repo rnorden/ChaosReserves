@@ -8,6 +8,12 @@ ChaosReserves_TopicReservelist_Request = "REQUEST"
 ChaosReserves_SerializationDelimiter = "§"
 ChaosReserves_ReserveListSerializationDelimiter = "#"
 
+ChaosReserves_GatesMap = {
+	"Naxxramas" = "Plaguewood",
+	"AQ40" = "Gates of Ahn'Qiraj",
+	"BWL" = "Blackrock Spire"
+}
+
 -- changeable global variables
 ChaosReserves_Disabled = true
 ChaosReserves_debug = false
