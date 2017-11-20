@@ -287,6 +287,7 @@ function ChaosReserves_WipeReserves()
 	end
 end
 
+--[[ --not used
 function ChaosReserves_findPlayerInOnlineOfflineMessage(msg)
 	local temp = msg
 	string.gsub(temp, "|Hp[^|]*|h[^|]*|h", "|Hp[^|]*|h[^|]*|h")
@@ -313,6 +314,7 @@ function ChaosReserves_isPlayerInGuild(player)
 	if ChaosReserves_debug then Debug_Message("Didn't find player="..player.." in guild!"); end
 	return false
 end
+--]]
 
 function ChaosReserves_SetLeader(sender, newLeader)
 	if newLeader == nil then newLeader = UnitName("player") end
@@ -442,11 +444,13 @@ function ChaosReserves_PrintReserves()
 	end
 end
 
+--[[ --not used
 function ChaosReserves_AnnounceLeader(playerToGreet)
 	if ChaosReserves_ImTheLeader() then
 		ChaosReserves_Whisper(playerToGreet, "Hello "..playerToGreet.."! You're late to the raid but don't worry. Reserves are managed by "..ChaosReserves_Leader..". You can add yourself to reserves with !"..ChaosReserves_SlashCommand1.." add");
 	end
 end
+--]]
 
 function ChaosReserves_IsPlayerInRaid(player)
 	for i=1, GetNumRaidMembers() do
