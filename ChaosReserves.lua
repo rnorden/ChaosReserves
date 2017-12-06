@@ -565,7 +565,11 @@ function ChaosReserves_GuildMessage(msg)
 end
 
 function ChaosReserves_Whisper(recipient, msg)
-	SendChatMessage(msg, "WHISPER", nil, recipient)
+	if UnitLevel("player") > 10 then
+		SendChatMessage(msg, "WHISPER", nil, recipient)
+	else
+		ChaosReserves_GuildMessage("@"..recipient..": "..msg)
+	end
 end
 
 function ChaosReserves_AddonMessage(topic, msg)
