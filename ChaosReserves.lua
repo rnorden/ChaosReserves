@@ -217,17 +217,40 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 end
 
 function ChaosReserves_WhisperChatCommandsHelp(sender)
-	ChaosReserves_Whisper(sender, "Use something like: ")
+	commonCommandHelpTexts = {
+		"add [altname] - add yourself with an optional altname if you're saving buffs",
+		"list - list the current reserve list",
+		"remove - remove yourself",
+		"help - show this help",
+	}
+	officerCommandHelpTexts = {
+		"remove [name] - remove [name] from reserves",
+		"raid [raidname] - set the raid to enable zone checks",
+		"force check - force an afk check",
+		"leader - after sending this you will be the leader",
+	}
 	local prefix = "   !"..ChaosReserves_SlashCommand1.." "
-	ChaosReserves_Whisper(sender, prefix.."add [altname] - add yourself with an optional altname if you're saving buffs")
-	ChaosReserves_Whisper(sender, prefix.."list - list the current reserve list")
-	ChaosReserves_Whisper(sender, prefix.."remove - remove yourself")
-	if ChaosReserves_isOfficer(sender) then
-		ChaosReserves_Whisper(sender, prefix.."remove [name] - remove [name] from reserves")
-		ChaosReserves_Whisper(sender, prefix.."force check - force an afk check")
-		ChaosReserves_Whisper(sender, prefix.."leader - after sending this you will be the leader")
+	if sender == UnitName("player") then
+		Debug_Message("Use something like: ")
+		for txt in commonCommandHelpTexts do
+			Debug_Message(prefix..commonCommandHelpTexts[txt])
+		end
+		if ChaosReserves_isOfficer(sender) then
+			for txt in officerCommandHelpTexts do
+				Debug_Message(prefix..officerCommandHelpTexts[txt])
+			end
+		end
+	else
+		ChaosReserves_Whisper(sender, "Use something like: ")
+		for txt in commonCommandHelpTexts do
+			ChaosReserves_Whisper(sender, prefix..commonCommandHelpTexts[txt])
+		end
+		if ChaosReserves_isOfficer(sender) then
+			for txt in officerCommandHelpTexts do
+				ChaosReserves_Whisper(sender, prefix..officerCommandHelpTexts[txt])
+			end
+		end
 	end
-	ChaosReserves_Whisper(sender, prefix.."help - show this help")
 end
 
 --[[ --not used because it's to spammy... maybe memorizing who is already whispered would fix this.
