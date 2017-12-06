@@ -8,10 +8,10 @@ ChaosReserves_TopicReservelist_Request = "REQUEST"
 ChaosReserves_SerializationDelimiter = "§"
 ChaosReserves_ReserveListSerializationDelimiter = "#"
 
-ChaosReserves_GatesMap = {
-	"Naxxramas" = "Plaguewood",
-	"AQ40" = "Gates of Ahn'Qiraj",
-	"BWL" = "Blackrock Spire"
+ChaosReserves_RaidGates = {
+	["Naxx"] = "Plaguewood",
+	["AQ40"] = "Gates of Ahn'Qiraj",
+	["BWL"] = "Blackrock Spire"
 }
 
 -- changeable global variables
@@ -27,6 +27,12 @@ ChaosReserves_GuildRosterInfoCache = {}
 
 -- this is the reserve manager (leader)
 ChaosReserves_Leader = UnitName("player")
+
+-- this is the current raid
+ChaosReserves_Raid = nil
+
+-- do we check the zone before adding to reserves?
+ChaosReserves_DoZoneCheck = true
 
 --debug function to print all local variables
 function ChaosReserves_DumpVariables()
