@@ -35,29 +35,35 @@ function ChaosReserves_DumpVariables()
 	Debug_Message("ChaosReserves_Leader: "..ChaosReserves_Leader);
 end
 
+ChaosReserves_LastGuildRosterUpdate = 0
+
 function ChaosReserves_InitGuildRosterInfoCache()
-	ChaosReserves_GuildRosterInfoCache = {}
-	SetGuildRosterShowOffline(true) -- include offline guildies
-	for i=1, GetNumGuildMembers() do
-		local name, rank, rankIndex, level, class = GetGuildRosterInfo(i);
-		ChaosReserves_GuildRosterInfoCache[name] = {
-			name = name,
-			rank = rank,
-			rankIndex = rankIndex,
-			level = level,
-			class = class
-		}
-	end
-	if ChaosReserves_debug then 
-		local idxName = UnitName("player")
-		local me = ChaosReserves_GuildRosterInfoCache[idxName]
-		if me then
-			local itemString = "name: "..me["name"].." rank: "..me["rank"].." rankIndex: "..me["rankIndex"].." class: "..me["class"]
-			Debug_Message("Example GuildRosterInfoCache item: "..itemString)
-		else
-			Debug_Message(ChaosReserve_GetColoredString("ChaosReserves: Couldn't read the guild roster!", "FF0000"))
+	local timeDiff = time() - ChaosReserves_LastGuildRosterUpdate
+	if timeDiff > 10 then
+		SetGuildRosterShowOffline(true) -- include offline guildies
+		GuildRoster()
+		ChaosReserves_LastGuildRosterUpdate = time()
+		ChaosReserves_GuildRosterInfoCache = {}
+		for i=1, GetNumGuildMembers() do
+			local name, rank, rankIndex, level, class = GetGuildRosterInfo(i);
+			ChaosReserves_GuildRosterInfoCache[name] = {
+				name = name,
+				rank = rank,
+				rankIndex = rankIndex,
+				level = level,
+				class = class
+			}
 		end
-	end
+		if ChaosReserves_debug then 
+			local idxName = UnitName("player")
+			local me = ChaosReserves_GuildRosterInfoCache[idxName]
+			if me then
+				local itemString = "name: "..me["name"].." rank: "..me["rank"].." rankIndex: "..me["rankIndex"].." class: "..me["class"]
+				Debug_Message("Example GuildRosterInfoCache item: "..itemString)
+			else
+				Debug_Message(ChaosReserve_GetColoredString("ChaosReserves: Couldn't read the guild roster!", "FF0000"))
+			end
+		end
 end
 
 ChaosReserves_ListenEvents = {
