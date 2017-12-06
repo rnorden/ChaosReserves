@@ -505,9 +505,14 @@ function ChaosReserves_CallbackReservesUpdated()
 	ChaosReserves_SendReserveList(sender)
 end
 
+ChaosReserves_LastTimeReservesPrinted = 0
 function ChaosReserves_PrintReserves()
 	if ChaosReserves_ImTheLeader() then
-		ChaosReserves_BuildReservesString(ChaosReserves_GuildMessage)
+		local timeDiff = time() - ChaosReserves_LastTimeReservesPrinted
+		if timeDiff > 30 then
+			ChaosReserves_LastTimeReservesPrinted = time()
+			ChaosReserves_BuildReservesString(ChaosReserves_GuildMessage)
+		end
 	end
 end
 
