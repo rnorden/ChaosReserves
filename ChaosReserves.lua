@@ -492,9 +492,9 @@ function ChaosReserves_RemoveReserve(sender, removeName)
 			tremove(ChaosReserves_ReserveList, idxToRemove)
 			ChaosReserves_CallbackReservesUpdated()
 			if removeName ~= nil then
-				ChaosReserves_GuildMessage(removeName .. " was removed from reserves by " .. sender .. "!")
+				ChaosReserves_GuildMessage(nameToRemove .. " was removed from reserves by " .. sender .. "!")
 			else
-				ChaosReserves_GuildMessage(sender .. " removed himself/herself from reserves!")
+				ChaosReserves_GuildMessage(sender .. " removed from reserves!")
 			end
 		end
 	end
