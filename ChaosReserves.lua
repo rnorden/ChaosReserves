@@ -45,13 +45,14 @@ function ChaosReserves_InitGuildRosterInfoCache()
 		ChaosReserves_LastGuildRosterUpdate = time()
 		ChaosReserves_GuildRosterInfoCache = {}
 		for i=1, GetNumGuildMembers() do
-			local name, rank, rankIndex, level, class = GetGuildRosterInfo(i);
+			local name, rank, rankIndex, level, class, zone = GetGuildRosterInfo(i);
 			ChaosReserves_GuildRosterInfoCache[name] = {
 				name = name,
 				rank = rank,
 				rankIndex = rankIndex,
 				level = level,
-				class = class
+				class = class,
+				zone = zone
 			}
 		end
 		if ChaosReserves_debug then 
