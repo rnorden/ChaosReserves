@@ -452,15 +452,22 @@ function ChaosReserves_AddReserve(sender, altName)
 			end
 		end
 		if not exists then
-			local reserve = {}
-			reserve["name"] = sender
-			reserve["datetime"] = ChaosReserves_GetGameTime()
-			if altName ~= "" then
-				reserve["altname"] = altName
+			if ChaosReserves_debug then
+				Debug_Message("Do I have to check zone? "..tostring(ChaosReserves_DoZoneCheck).. " IsAtGates? "..tostring(ChaosReserves_IsAtRaidGates(sender)).." --> " .. tostring(ChaosReserves_DoZoneCheck) or tostring(ChaosReserves_IsAtRaidGates(sender)))
 			end
-			tinsert(ChaosReserves_ReserveList, reserve)
-			ChaosReserves_CallbackReservesUpdated()
-			ChaosReserves_PrintReserves()
+			if not ChaosReserves_DoZoneCheck or ChaosReserves_IsAtRaidGates(sender) then
+				local reserve = {}
+				reserve["name"] = sender
+				reserve["datetime"] = ChaosReserves_GetGameTime()
+				if altName ~= "" then
+					reserve["altname"] = altName
+				end
+				tinsert(ChaosReserves_ReserveList, reserve)
+				ChaosReserves_CallbackReservesUpdated()
+				ChaosReserves_PrintReserves()
+			else
+				ChaosReserves_Whisper(sender, "You need to be at the gates to be added to reserves!")
+			end
 		end
 	end
 end
