@@ -202,6 +202,9 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 			ChaosReserves_PrintReserves()
 		elseif (args == "leader") then
 			ChaosReserves_SetLeader(sender, nil)
+		elseif (string.find(args, "raid%s?")) then
+			_, _, subcommand, raid = string.find(args, "(%w+)%s?(.*)")
+			ChaosReserves_SetRaid(sender, raid)
 		elseif (args == "moinmoin") then
 			if mod(time(),10)==0 then
 				ChaosReserves_GuildMessage("Pucchini is the best! <3")
@@ -377,6 +380,42 @@ function ChaosReserves_SetLeader(sender, newLeader)
 	else
 		ChaosReserves_WhisperOfficersOnly(sender)
 	end
+end
+
+function ChaosReserves_SetRaid(sender, raid)
+	if ChaosReserves_ImTheLeader() then
+		raidSet = false
+		for availableRaid, gate in pairs(ChaosReserves_RaidGates) do
+			if string.lower(availableRaid) == string.lower(raid)  then -- check that requested raid is available
+				ChaosReserves_Raid = availableRaid
+				raidSet = true
+			end
+		end
+		if raidSet then
+			Debug_Message("Raid is now: "..ChaosReserves_Raid)
+		else
+			Debug_Message("Couldn't set the raid. Check that you supplied a valid raid (Naxx, AQ40, BWL).")
+		end
+	else
+		if sender == UnitName("player") then
+			Debug_Message("You need to be leader to do this!")
+		else
+			ChaosReserves_Whisper(sender, "You need to be leader to do this!")
+		end
+	end
+end
+
+function ChaosReserves_IsAtRaidGates(player)
+	ChaosReserves_InitGuildRosterInfoCache() -- update the guildroster
+	local playerGuildInfo = ChaosReserves_GuildRosterInfoCache[player]
+	local raidGate = ChaosReserves_RaidGates[ChaosReserves_Raid]
+	if ChaosReserves_debug then
+		Debug_Message("Checking if player "..player.." at "..playerGuildInfo["zone"].." is at raidGate "..ChaosReserves_RaidGates[ChaosReserves_Raid].." -->"..tostring(playerGuildInfo[zone] == raidGate))
+	end
+	if playerGuildInfo[zone] == raidGate then
+		return true
+	end
+	return false
 end
 
 function ChaosReserves_isOfficer(player)
