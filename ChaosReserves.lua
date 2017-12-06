@@ -65,6 +65,7 @@ function ChaosReserves_InitGuildRosterInfoCache()
 				Debug_Message(ChaosReserve_GetColoredString("ChaosReserves: Couldn't read the guild roster!", "FF0000"))
 			end
 		end
+	end
 end
 
 ChaosReserves_ListenEvents = {
