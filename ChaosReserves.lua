@@ -9,9 +9,9 @@ ChaosReserves_SerializationDelimiter = "§"
 ChaosReserves_ReserveListSerializationDelimiter = "#"
 
 ChaosReserves_RaidGates = {
-	["Naxx"] = "Plaguewood",
-	["AQ40"] = "Gates of Ahn'Qiraj",
-	["BWL"] = "Blackrock Spire"
+	["Naxx"] = "Eastern Plaguelands",--"Plaguewood",
+	["AQ40"] = "Silithus",--"Gates of Ahn'Qiraj",
+	["BWL"] = "Blackrock Mountain",--"Blackrock Spire"
 }
 
 -- changeable global variables
