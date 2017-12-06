@@ -464,7 +464,7 @@ function ChaosReserves_AddReserve(sender, altName)
 				end
 				tinsert(ChaosReserves_ReserveList, reserve)
 				ChaosReserves_CallbackReservesUpdated()
-				ChaosReserves_PrintReserves()
+				ChaosReserves_GuildMessage("+")
 			else
 				ChaosReserves_Whisper(sender, "You need to be at the gates to be added to reserves!")
 			end
@@ -496,7 +496,6 @@ function ChaosReserves_RemoveReserve(sender, removeName)
 			else
 				ChaosReserves_GuildMessage(sender .. " removed himself/herself from reserves!")
 			end
-			ChaosReserves_PrintReserves()
 		end
 	end
 end
