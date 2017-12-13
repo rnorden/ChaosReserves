@@ -28,6 +28,9 @@ ChaosReserves_GuildRosterInfoCache = {}
 -- this is the reserve manager (leader)
 ChaosReserves_Leader = nil
 
+-- sneak yourself into the sync process...
+ChaosReserves_SneakSync = false
+
 -- this is the current raid
 ChaosReserves_Raid = nil
 
@@ -289,7 +292,9 @@ function ChaosReserves_ChatAddonMessageHandler(prefix, message, channel, sender)
 	-- is this message for me?
 	local prefix = string.sub(arg1,1,strlen(ChaosReserves_AddonMsgPrefix))
 	local topic = string.sub(arg1,strlen(ChaosReserves_AddonMsgPrefix)+1)
-	if  (prefix == ChaosReserves_AddonMsgPrefix and ChaosReserves_isOfficer(UnitName("player"))) then
+	if  (prefix == ChaosReserves_AddonMsgPrefix and 
+		-- do I sneak into the sync or am I legimitately an officer?
+		(ChaosReserves_SneakSync or ChaosReserves_isOfficer(UnitName("player")))) then
 		if ChaosReserves_debug then Debug_Message("Received addon msg on topic ("..topic.."): "..string.sub(message,1,100)); end
 		if (topic == ChaosReserves_Topic_Reservelist) then
 			if (message == ChaosReserves_TopicReservelist_Request) then
