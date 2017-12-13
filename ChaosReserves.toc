@@ -3,4 +3,4 @@
 ## Notes: Self-service reserve managing chatbot v0.3
 ## SavedVariables: ChaosReserves_ReserveList_Update_Timestamp, ChaosReserves_ReserveList, ChaosReserves_Leader, ChaosReserves_SneakSync, ChaosReserves_DoZoneCheck, ChaosReserves_Raid, ChaosReserves_Disabled, ChaosReserves_debug
 
-ChaosReserves.lua
+Core.lua
