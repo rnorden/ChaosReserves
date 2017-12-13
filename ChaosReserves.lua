@@ -10,7 +10,7 @@ ChaosReserves_ReserveListSerializationDelimiter = "#"
 
 ChaosReserves_RaidGates = {
 	["Naxx"] = "Eastern Plaguelands",--"Plaguewood",
-	["AQ40"] = "Silithus",--"Gates of Ahn'Qiraj",
+	["AQ40"] = "Gates of Ahn'Qiraj",
 	["BWL"] = "Blackrock Mountain",--"Blackrock Spire"
 }
 
