@@ -397,12 +397,6 @@ function ChaosReserves_SetRaid(sender, raid)
 		else
 			Debug_Message("Couldn't set the raid. Check that you supplied a valid raid (Naxx, AQ40, BWL).")
 		end
-	else
-		if sender == UnitName("player") then
-			Debug_Message("You need to be leader to do this!")
-		else
-			ChaosReserves_Whisper(sender, "You need to be leader to do this!")
-		end
 	end
 end
 
