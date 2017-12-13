@@ -469,7 +469,7 @@ function ChaosReserves_AddReserve(sender, altName)
 				ChaosReserves_CallbackReservesUpdated()
 				ChaosReserves_GuildMessage("+")
 			else
-				ChaosReserves_Whisper(sender, "You need to be at the gates to be added to reserves!")
+				ChaosReserves_Whisper(sender, "You need to be at the gates ("..ChaosReserves_RaidGates[ChaosReserves_Raid]..") to be added to reserves!")
 			end
 		end
 	end
