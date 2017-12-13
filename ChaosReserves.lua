@@ -201,7 +201,7 @@ function ChaosReserves_ChatCommandHandler(sender, msg)
 		elseif (args == "list") then
 			ChaosReserves_PrintReserves()
 		elseif (args == "leader") then
-			ChaosReserves_SetLeader(sender, nil)
+			ChaosReserves_SetLeader(sender, sender)
 		elseif (string.find(args, "raid%s?")) then
 			_, _, subcommand, raid = string.find(args, "(%w+)%s?(.*)")
 			ChaosReserves_SetRaid(sender, raid)
