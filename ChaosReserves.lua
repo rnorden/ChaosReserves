@@ -38,7 +38,7 @@ ChaosReserves_DoZoneCheck = true
 function ChaosReserves_DumpVariables()
 	Debug_Message("ChaosReserves_ReserveList: "..ChaosReserves_serializeReserveList(ChaosReserves_ReserveList_Update_Timestamp, ChaosReserves_ReserveList));
 	Debug_Message("ChaosReserves_ReserveList_Update_Timestamp: "..ChaosReserves_ReserveList_Update_Timestamp);
-	Debug_Message("ChaosReserves_Leader: "..ChaosReserves_Leader);
+	Debug_Message("ChaosReserves_Leader: "..tostring(ChaosReserves_Leader));
 end
 
 ChaosReserves_LastGuildRosterUpdate = 0
@@ -406,6 +406,7 @@ function ChaosReserves_SetRaid(sender, raid)
 end
 
 function ChaosReserves_IsAtRaidGates(player)
+	if not ChaosReserves_Raid then Debug_Message("Can't check if player is at gates because the raid has not been set."); return true; end
 	ChaosReserves_InitGuildRosterInfoCache() -- update the guildroster
 	local playerGuildInfo = ChaosReserves_GuildRosterInfoCache[player]
 	local raidGate = ChaosReserves_RaidGates[ChaosReserves_Raid]
@@ -445,6 +446,7 @@ end
 function ChaosReserves_AddReserve(sender, altName)
 	if ChaosReserves_ImTheLeader() then
 		local exists = false
+		if not ChaosReserves_ReserveList then ChaosReserves_ReserveList = { } end
 		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
 			if reserve["name"] == sender then
 				ChaosReserves_Whisper(sender, sender .. " is already on reserves, you idiot!")
@@ -482,6 +484,7 @@ function ChaosReserves_RemoveReserve(sender, removeName)
 			return
 		end
 		if not removeName or removeName == "" then nameToRemove = string.lower(sender) else nameToRemove = string.lower(removeName) end
+		if not ChaosReserves_ReserveList then ChaosReserves_ReserveList = { } end
 		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
 			if string.lower(reserve["name"]) == nameToRemove then
 				idxToRemove = idx
@@ -521,7 +524,7 @@ function ChaosReserves_DumpReservesList()
 end
 
 function ChaosReserves_BuildReservesString(printFunction)
-	numberOfReserves = getn(ChaosReserves_ReserveList)
+	if not ChaosReserves_ReserveList then numberOfReserves = 0 else numberOfReserves = getn(ChaosReserves_ReserveList) end
 	msgString = "Current reserves (" .. numberOfReserves .. "): "
 	if numberOfReserves > 0 then
 		for idx, reserve in ipairs(ChaosReserves_ReserveList) do
@@ -643,6 +646,7 @@ function ChaosReserves_serializeReserveList(timestamp, reserveList)
 	timeStampMap = {}
 	timeStampMap["timestamp"] = timestamp
 	serializedReserveList = ChaosReserves_serializeMap(timeStampMap) .. ChaosReserves_ReserveListSerializationDelimiter
+	if not reserveList then reserveList = { } end
 	for _, reserve in ipairs(reserveList) do
 		serializedReserveList = serializedReserveList .. ChaosReserves_serializeMap(reserve) .. ChaosReserves_ReserveListSerializationDelimiter
 	end
