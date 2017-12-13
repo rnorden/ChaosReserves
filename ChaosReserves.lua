@@ -26,7 +26,7 @@ ChaosReserves_ReserveList_Update_Timestamp = 0
 ChaosReserves_GuildRosterInfoCache = {}
 
 -- this is the reserve manager (leader)
-ChaosReserves_Leader = UnitName("player")
+ChaosReserves_Leader = nil
 
 -- this is the current raid
 ChaosReserves_Raid = nil
