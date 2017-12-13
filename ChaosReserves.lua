@@ -15,7 +15,7 @@ ChaosReserves_RaidGates = {
 }
 
 -- changeable global variables
-ChaosReserves_Disabled = true
+ChaosReserves_Disabled = false
 ChaosReserves_debug = false
 
 -- list of current reserves
