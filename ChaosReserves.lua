@@ -414,7 +414,7 @@ function ChaosReserves_IsAtRaidGates(player)
 	if ChaosReserves_debug then
 		Debug_Message("Checking if player "..player.." at "..playerGuildInfo["zone"].." is at raidGate "..ChaosReserves_RaidGates[ChaosReserves_Raid].." -->"..tostring(playerGuildInfo[zone] == raidGate))
 	end
-	if playerGuildInfo[zone] == raidGate then
+	if playerGuildInfo["zone"] == raidGate then
 		return true
 	end
 	return false
