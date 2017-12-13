@@ -78,7 +78,6 @@ function ChaosReserves_InitGuildRosterInfoCache()
 end
 
 ChaosReserves_ListenEvents = {
-	"ADDON_LOADED",
 	"CHAT_MSG_ADDON", 
 	"CHAT_MSG_GUILD", -- messages in guild chat
 	"CHAT_MSG_SYSTEM", -- online/offline system messages
@@ -94,8 +93,7 @@ function ChaosReserves_Init(f)
 	SLASH_CHAOSRESERVES2 = "/"..ChaosReserves_SlashCommand2;
 	SlashCmdList["CHAOSRESERVES"] = function(args) ChaosReserves_SlashHandler(args); end;
 	Debug_Message("ChaosReserves loaded. Have fun raiding!");
-	ChaosReserves_InitGuildRosterInfoCache()
-	ChaosReserves_RequestReserveList()
+	ChaosReserves_SlashHandler("enable")
 end
 
 function ChaosReserves_RegisterEvents(f, events)
@@ -113,9 +111,7 @@ end
 -- Event handling
 function ChaosReserves_EventHandlers(event)
 	if ChaosReserves_Disabled then return end
-	if event == "ADDON_LOADED" then
-		ChaosReserves_SlashHandler("enable")
-	elseif event == "CHAT_MSG_ADDON" then
+	if event == "CHAT_MSG_ADDON" then
 		ChaosReserves_ChatAddonMessageHandler(arg1, arg2, arg3, arg4)
 	elseif event == "CHAT_MSG_GUILD" then
 		ChaosReserves_ChatCommandHandler(arg2, arg1);
