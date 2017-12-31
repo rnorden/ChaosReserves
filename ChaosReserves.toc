@@ -1,6 +1,21 @@
 ## Interface: 11200
 ## Title: ChaosReserves
 ## Notes: Self-service reserve managing chatbot v0.3
-## SavedVariables: ChaosReserves_ReserveList_Update_Timestamp, ChaosReserves_ReserveList, ChaosReserves_Leader, ChaosReserves_SneakSync, ChaosReserves_DoZoneCheck, ChaosReserves_Raid, ChaosReserves_Disabled, ChaosReserves_debug
+## SavedVariables: ChaosReservesDB
+## OptionalDeps: Ace2
 
-ChaosReserves.lua
+libs\AceLibrary\AceLibrary.lua
+libs\AceOO-2.0\AceOO-2.0.lua
+libs\AceAddon-2.0\AceAddon-2.0.lua
+libs\AceConsole-2.0\AceConsole-2.0.lua
+libs\AceDebug-2.0\AceDebug-2.0.lua
+libs\AceDB-2.0\AceDB-2.0.lua
+libs\AceEvent-2.0\AceEvent-2.0.lua
+libs\ChatThrottleLib\ChatThrottleLib.lua
+libs\ChatThrottleLib\ChatThrottleStats.lua
+
+Core.lua
+AfkCheck.lua
+Communication.lua
+EP.lua
+Printing.lua
