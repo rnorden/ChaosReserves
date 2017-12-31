@@ -1,8 +1,8 @@
 ## Interface: 11200
 ## Title: ChaosReserves
-## Notes: Self-service reserve managing chatbot v0.3
+## Notes: Self-service reserve managing chatbot v0.7
 ## SavedVariables: ChaosReservesDB
-## OptionalDeps: Ace2
+## Dependencies: Ace2
 
 libs\AceLibrary\AceLibrary.lua
 libs\AceOO-2.0\AceOO-2.0.lua
