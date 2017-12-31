@@ -6,9 +6,9 @@ end
 
 function ChaosReserves:PrintReserves()
 	if self:ImTheLeader() then
-		local timeDiff = time() - self.lastTimeReservesPrinted
+		local timeDiff = time() - self.db.profile.lastTimeReservesPrinted
 		if timeDiff > 30 then
-			self.LastTimeReservesPrinted = time()
+			self.db.profile.lastTimeReservesPrinted = time()
 			self:GuildMessageTable(self:BuildReservesString())
 		end
 	end
@@ -17,13 +17,13 @@ end
 function ChaosReserves:BuildReservesString()
 	local msgTable = { }
 	local numberOfReserves = 0
-	if self.reserveList then
-		numberOfReserves = getn(self.reserveList)
+	if self.db.profile.reserveList then
+		numberOfReserves = getn(self.db.profile.reserveList)
 	end
 	local msgString = string.format("Current reserves (%d): ", numberOfReserves)
 	if numberOfReserves > 0 then
-		for idx, reserve in ipairs(self.reserveList) do
-			tempMsgString = string.format("%s%s (%s) ", msgString, self:GetPrintName(reserve), reserve["timeAdded"])
+		for idx, reserve in ipairs(self.db.profile.reserveList) do
+			tempMsgString = string.format("%s%s", msgString, self:BuildSingleReserveString(reserve))
 			if idx < numberOfReserves then
 				-- more reserves in the list, add separator
 				tempMsgString = tempMsgString .. ", "
@@ -31,7 +31,7 @@ function ChaosReserves:BuildReservesString()
 			if (strlen(tempMsgString) > 255) then --prematurely send a message because there's a 255 char limit
 				tinsert(msgTable, msgString)
 				-- overwrite the existing msgString because it has been sent already
-				msgString = string.format("%s (%s) ", self:GetPrintName(reserve), reserve["timeAdded"])
+				msgString = self:BuildSingleReserveString(reserve)
 				if idx < numberOfReserves then
 					-- more reserves in the list, add separator
 					msgString = msgString .. ", "
@@ -47,9 +47,23 @@ function ChaosReserves:BuildReservesString()
 	return msgTable
 end
 
+function ChaosReserves:BuildSingleReserveString(reserve)
+	local reserveStringTemplate = "%s (%s) "
+	return string.format(reserveStringTemplate, self:GetPrintName(reserve), self:BuildAdditionalReserveInfo(reserve))
+end
+
+function ChaosReserves:BuildAdditionalReserveInfo(reserve)
+	local infoTable = { }
+	tinsert(infoTable, reserve["timeAdded"])
+	if reserve["EP"] then
+		tinsert(infoTable, reserve["EP"].." EP")
+	end
+	return table.concat(infoTable, "; ")
+end
+
 function ChaosReserves:GetPrintName(reserve)
 	ret = reserve["name"]
-	local playerGuildInfo = self.GuildRosterInfoCache[ret]
+	local playerGuildInfo = self.db.profile.guildRosterInfoCache[ret]
 	class = nil; if playerGuildInfo then class = playerGuildInfo["class"]; end
 	ret = self:GetColoredString(self:GetClickableLink(ret, ret), ChaosReserves:GetColorCodeForClass(class))
 	if reserve["altname"] ~= nil then

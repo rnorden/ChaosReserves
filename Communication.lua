@@ -9,6 +9,13 @@ ChaosReserves.topic_Reservelist = "RESERVELIST"
 ChaosReserves.topic_Reservelist_Request = "REQUEST"
 ChaosReserves.serializationDelimiter = "§"
 ChaosReserves.reserveListSerializationDelimiter = "#"
+ChaosReserves.whisperBuffer = { }
+ChaosReserves.lastWhisperTime = 0
+ChaosReserves.periodicWhisperEvent = "ChaosReservesPeriodicWhisper"
+
+---------------------------------
+-- Communication Events        --
+---------------------------------
 
 ---------------------------------
 -- Communication functionality --
@@ -23,9 +30,29 @@ function ChaosReserves:GuildMessage(msg)
 	SendChatMessage(msg, "GUILD");
 end
 
-function ChaosReserves:Whisper(recipient, msg)
+-- interface that will buffer whispers
+function ChaosReserves:Whisper(pRecipient, pMsg)
+	tinsert(ChaosReserves.whisperBuffer, { recipient = pRecipient, msg = pMsg })
+end
+
+function ChaosReserves:ProcessWhisperBuffer()
+	if time()-self.lastWhisperTime >= 5 then
+		if getn(self.whisperBuffer) > 0 then
+			local i = 0
+			repeat
+				local data = tremove(self.whisperBuffer, 1);
+				self:WhisperInternal(data.recipient, data.msg)
+				i = i+1
+			until i == 5 or getn(self.whisperBuffer) == 0
+		end
+	end
+end
+
+-- internal method that will send messages
+function ChaosReserves:WhisperInternal(recipient, msg)
 	if UnitLevel("player") > 10 then
 		SendChatMessage(msg, "WHISPER", nil, recipient)
+		self.lastWhisperTime = time()
 	else
 		self:GuildMessage("@"..recipient..": "..msg)
 	end
@@ -60,8 +87,10 @@ function ChaosReserves:WhisperChatCommandsHelp(sender)
 	officerCommandHelpTexts = {
 		"remove [name] - remove [name] from reserves",
 		"raid [raidname] - set the raid to enable zone checks",
-		"force check - force an afk check",
+		--"force check - force an afk check",
 		"leader - after sending this you will be the leader",
+		"ep[add/remove] [name] [EP] - add/remove [EP] from [name]",
+		"ep[add/remove]all [EP] - add/remove [EP] from everyone on the list",
 	}
 	local prefix = "   "..self.chatCommandPrefix..self.slashCommand1.." "
 	if sender == UnitName("player") then
@@ -135,10 +164,10 @@ function ChaosReserves:ProcessIncomingLeader(sender, leader)
 end
 
 function ChaosReserves:SendReserveList(sender)
-	if not self.reserveList or getn(self.reserveList) == 0 then return; end -- dont reply with empty reserve list
+	if not self.db.profile.reserveList or getn(self.db.profile.reserveList) == 0 then return; end -- dont reply with empty reserve list
 	if sender ~= UnitName("player") then -- dont answer your own request
 		self:LevelDebug(2,"Incoming reserve list request...")
-		self:AddonMessage(self.topic_Reservelist, self:SerializeReserveList(self.reserveList_Update_Timestamp, self.reserveList))
+		self:AddonMessage(self.topic_Reservelist, self:SerializeReserveList(self.db.profile.reserveList_Update_Timestamp, self.db.profile.reserveList))
 		self:LevelDebug(2,"Finished sending my reserve list!")
 	end
 end
@@ -147,9 +176,9 @@ function ChaosReserves:ProcessIncomingReserveList(sender, serializedReserveList)
 	if sender ~= UnitName("player") then -- dont handle your own response
 		self:Debug(2,"Incoming reserve list: "..serializedReserveList)
 		local timestamp, reserveList = self:DeserializeReserveList(serializedReserveList)
-		if (tonumber(timestamp) > tonumber(self.reserveList_Update_Timestamp)) then -- the incoming reserveList is newer than what I have
-			self.reserveList_Update_Timestamp = tonumber(timestamp)
-			self.reserveList = reserveList
+		if (tonumber(timestamp) > tonumber(self.db.profile.reserveList_Update_Timestamp)) then -- the incoming reserveList is newer than what I have
+			self.db.profile.reserveList_Update_Timestamp = tonumber(timestamp)
+			self.db.profile.reserveList = reserveList
 			self:Print("Updated reserve list with "..sender.."'s!")
 		end
 	end
