@@ -519,6 +519,7 @@ function ChaosReserves:UpdateGuildRosterInfoCache()
 			self.db.profile.guildRosterInfoCache["Eadi"]["rankIndex"] = 0
 		end
 	end
+	SetGuildRosterShowOffline(false)
 end
 
 function ChaosReserves:GetGameTime()
